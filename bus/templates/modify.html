@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <style type="text/css">
+
+.container {
+    position: relative;
+}
+
+.slot {
+    position: absolute;
+    width: 160px;
+    height: 40px;
+    border: 1px dashed black;
+}
+
+.bus {
+    width: 160px;
+    height: 40px;
+    border: 1px solid black;
+    background-color: yellow;
+    line-height: 40px;
+    text-align: center;
+}
+
+    </style>
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+{% endblock %}
+
+{% block nav-style %} right{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="slots">
+    {% for slot in slots %}
+        <div class="slot" style="{{ slot.style }}"></div>
+    {% endfor %}
+    </div>
+
+    <div class="buses">
+
+    </div>
+
+</div>
+{% endblock %}

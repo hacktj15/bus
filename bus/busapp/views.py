@@ -8,8 +8,12 @@ from .models import BusInstance, Bus, County, Slot, Coordinate
 def display_view(request):
     """Displays the list of buses."""
 
-    slots = Slot.objects.all()
+    slots = list(Slot.objects.all())
     instances = BusInstance.objects.all()
+
+    for inst in instances:
+        slots.remove(inst.slot)
+
     context = {
         "slots": slots,
         "instances": instances

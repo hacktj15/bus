@@ -32,9 +32,15 @@ class Slot(models.Model):
     """Represents a possible location for a bus."""
 
     coord = models.ForeignKey(Coordinate)
+    rotate = models.IntegerField(default=0) # between 0-360
 
     def style(self):
-        return "left: {}px; top: {}px".format(self.coord.x, self.coord.y)
+        pos = "left: {}px; top: {}px".format(self.coord.x, self.coord.y)
+        if self.rotate != 0:
+            for vend in ["-ms-", "-webkit-", ""]:
+                pos += "; transform: {}rotate({}deg)".format(vend, self.rotate)
+
+        return pos
 
     def __unicode__(self):
         return "{}".format(self.coord)
@@ -43,7 +49,7 @@ class BusInstance(models.Model):
     """Represents a specific instance of a bus."""
 
     bus = models.ForeignKey(Bus)
-    arrived = models.BooleanField()
+    arrived = models.BooleanField(default=False)
     arrived_time = models.DateTimeField(null=True)
     slot = models.ForeignKey(Slot)
 
