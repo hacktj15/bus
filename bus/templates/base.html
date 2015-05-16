@@ -24,7 +24,17 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav{% block nav-style %}{% endblock %}">
             {% block nav %}
-                <li><a href="/login">Login</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="/display">Display</a></li>
+                    <li><a href="/modify">Modify</a></li>
+                </ul>
+                <ul class="nav navbar-nav right">
+                    <li><a href="/logout">Logout</a></li>
+                {% else %}
+            </ul>
+            <ul class="nav navbar-nav right">
+                    <li><a href="/login">Login</a></li>
+                {% endif %}
             {% endblock %}
             </ul>
         </div>

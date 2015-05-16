@@ -23,6 +23,10 @@ def display_view(request):
     return render(request, "display.html", context)
 
 
+def modify_view(request):
+    context = {}
+    return render(request, "modify.html", context)
+
 def login_view(request):
     """Displays the login page and processes authentication."""
 
