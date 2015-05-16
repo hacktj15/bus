@@ -19,3 +19,10 @@ def display_view(request):
         "instances": instances
     }
     return render(request, "display.html", context)
+
+
+def login_view(request):
+    """Displays the login page and processes authentication."""
+
+    context = {}
+    return render(request, "login.html", context)

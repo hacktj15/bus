@@ -8,5 +8,6 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^$', 'busapp.views.display_view', name='display_view')
+    url(r'^$', 'busapp.views.display_view', name='display_view'),
+    url(r'^login$', 'busapp.views.login_view', name='login_view')
 )
