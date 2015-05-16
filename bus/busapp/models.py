@@ -13,14 +13,6 @@ class Bus(models.Model):
     name = models.CharField(max_length=25)
     county = models.ForeignKey(County, null=True, blank=True)
 
-class BusInstance(models.Model):
-    """Represents a specific instance of a bus."""
-
-    bus = models.ForeignKey(Bus)
-    arrived = models.BooleanField()
-    arrived_time = models.DateTimeField(null=True)
-    slot = models.ForeignKey(Slot)
-
 class Coordinate(models.Model):
     """Represents an (x, y) coordinate."""
 
@@ -31,3 +23,11 @@ class Slot(models.Model):
     """Represents a possible location for a bus."""
 
     coord = models.ForeignKey(Coordinate)
+
+class BusInstance(models.Model):
+    """Represents a specific instance of a bus."""
+
+    bus = models.ForeignKey(Bus)
+    arrived = models.BooleanField()
+    arrived_time = models.DateTimeField(null=True)
+    slot = models.ForeignKey(Slot)
