@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!doctype html>
 <html>
 <head>
@@ -6,21 +7,34 @@
         {% endblock %}
     </title>
     {% block css %}
-
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css' />
+        <link rel="stylesheet" type="text/css" href="http://getbootstrap.com/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="{% static 'base.css' %}" />
     {% endblock %}
 
     {% block js %}
-
+        <script type="text/javascript" src="{% static 'base.js' %}"></script>
     {% endblock %}
 
 </head>
 <body>
+{% block body %}
+    <nav class="navbar">
+        <a class="navbar-brand" href=".">BusFind</a>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav right">
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<div class="container">
-    {% block body %}
+    <div class="content">
+    {% block content %}
 
     {% endblock %}
-</div>
+    </div>
+
+{% endblock %}
 
 </body>
 </html>

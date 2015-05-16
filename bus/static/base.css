@@ -1,1 +1,23 @@
-/* */
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+nav {
+    background: #222;
+}
+
+nav a.navbar-brand {
+    font-size: 24px;
+}
+
+nav > ul {
+    width: 100%;
+}
+
+nav a {
+    color: #9d9d9d;
+}
+
+nav ul.right {
+    float: right;
+}
