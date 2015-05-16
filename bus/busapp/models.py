@@ -7,7 +7,7 @@ class County(models.Model):
 
     name = models.CharField(max_length=30)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}".format(self.name)
 
 class Bus(models.Model):
@@ -16,7 +16,7 @@ class Bus(models.Model):
     name = models.CharField(max_length=25)
     county = models.ForeignKey(County, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} ({})".format(self.name, self.county)
 
 class Coordinate(models.Model):
@@ -25,7 +25,7 @@ class Coordinate(models.Model):
     x = models.IntegerField()
     y = models.IntegerField()
 
-    def __unicode__(self):
+    def __str__(self):
         return "({}, {})".format(self.x, self.y)
 
 class Slot(models.Model):
@@ -42,7 +42,7 @@ class Slot(models.Model):
 
         return pos
 
-    def __unicode__(self):
+    def __str__(self):
         return "{}".format(self.coord)
 
 class BusInstance(models.Model):
@@ -53,5 +53,5 @@ class BusInstance(models.Model):
     arrived_time = models.DateTimeField(null=True)
     slot = models.ForeignKey(Slot)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{} - {}".format(self.bus, self.slot)
