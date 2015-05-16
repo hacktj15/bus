@@ -24,7 +24,16 @@ def display_view(request):
 
 
 def modify_view(request):
-    context = {}
+    slots = list(Slot.objects.all())
+    instances = BusInstance.objects.all()
+
+    for inst in instances:
+        slots.remove(inst.slot)
+
+    context = {
+        "slots": slots,
+        "instances": instances
+    }
     return render(request, "modify.html", context)
 
 def login_view(request):
