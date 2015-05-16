@@ -11,10 +11,12 @@
 
 {% block content %}
 <div class="login-card">
-	<h1>Log-in</h1><br>
-	<form>
-		<input type="text" name="user" placeholder="Username">
-		<input type="password" name="pass" placeholder="Password">
+	<h1>Login</h1><br>
+	{% if error %}{{ error }}{% endif %}
+	<form method="post" action="/login">
+	{% csrf_token %}
+		<input type="text" name="username" placeholder="Username">
+		<input type="password" name="password" placeholder="Password">
 		<input type="submit" name="login" class="login login-submit" value="Login">
 	</form>
 </div>

@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.contrib.auth import authenticate, login
 from .models import BusInstance, Bus, County, Slot, Coordinate
 
 
@@ -25,4 +27,14 @@ def login_view(request):
     """Displays the login page and processes authentication."""
 
     context = {}
+    if request.method == 'POST':
+        user = authenticate(username=request.POST.get('username'),
+                            password=request.POST.get('password'))
+
+        if user and user.is_active:
+            login(request, user)
+            return HttpResponseRedirect('/modify')
+        else:
+            context["error"] = "Invalid username or password."
+
     return render(request, "login.html", context)
