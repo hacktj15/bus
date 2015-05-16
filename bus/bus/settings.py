@@ -28,6 +28,10 @@ TEMPLATE_DIRS = (
     BASE_DIR + '/templates/',
 )
 
+STATICFILES_DIRS = (
+    BASE_DIR + '/static/',
+)
+
 ALLOWED_HOSTS = []
 
 
