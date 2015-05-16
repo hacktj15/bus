@@ -1,0 +1,3 @@
+django
+djangotoolbox
+django_mongodb_engine
