@@ -33,6 +33,9 @@ class Slot(models.Model):
 
     coord = models.ForeignKey(Coordinate)
 
+    def style(self):
+        return "left: {}px; top: {}px".format(self.coord.x, self.coord.y)
+
     def __unicode__(self):
         return "{}".format(self.coord)
 
