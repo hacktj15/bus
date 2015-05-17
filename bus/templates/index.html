@@ -47,7 +47,8 @@
 
 {% block js %}
     {{ block.super }}
-    {% include "draw-canvas.html" %}
+    <script type="text/javascript" src="{% static 'js/update.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -56,13 +57,14 @@ iodine = function() {
     location.href = "https://iodine.tjhsst.edu/sso?req={{ iodine_token }}"
 }
 </script>
+{% if not user.is_authenticated %}
 <div class="splash">
     <div class="x" onclick="$(this).parent().remove()">x</div>
     <h2>Welcome to BusFind.</h2>
     <p>Current arrival information is listed below as it happens, in real-time. Connect with your TJ Intranet account and get email notifications whenever your bus arrives on campus.</p>
     <button class="connectbtn login login-submit" onclick="iodine()">Log in with Intranet</button>
 </div>
-
+{% endif %}
 
 <div class="container">
     <canvas id="lineCanvas" width="1110" height="500"></canvas>

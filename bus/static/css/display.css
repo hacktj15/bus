@@ -37,7 +37,7 @@
     width: 100%;
 }
 
-.addbus .inner select, .addbus .inner .selectize-control {
+.addbus .inner select, .addbus .inner .selectize-control, .addbus .inner .selectize-control input {
     width: 430px;
     display: inline-block;
     float: left;
@@ -107,7 +107,7 @@
 }
 
 @media (max-width: 1170px) {
-    .content {
+    .container {
         zoom: 0.9
     }
 
@@ -117,7 +117,7 @@
 }
 
 @media (max-width: 1050px) {
-    .content {
+    .container {
         zoom: 0.8;
     }
 
@@ -127,7 +127,7 @@
 }
 
 @media (max-width: 934px) {
-    .content {
+    .container {
         zoom: 0.7;
     }
 
@@ -137,7 +137,7 @@
 }
 
 @media (max-width: 817px) {
-    .content {
+    .container {
         zoom: 0.6;
     }
 
@@ -147,7 +147,7 @@
 }
 
 @media (max-width: 700px) {
-    .content {
+    .container {
         zoom: 0.5;
     }
 

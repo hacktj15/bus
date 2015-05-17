@@ -40,9 +40,9 @@ ul.nav li a.highlight {
     color: white;
 }
 
-ul.nav li:hover a.highlight {
+/*ul.nav li:hover a.highlight {
     color: black;
-}
+}*/
 
 ul.nav li a.nobg {
     background: #222 !important;

@@ -39,8 +39,9 @@
             target.setAttribute('data-y', y);
         }
         interact('.slot').dropzone({
+
             accept: ".bus",
-            overlap: 0.1,
+            overlap: 'pointer',
 
             ondropactivate: function(event) {
                 event.target.classList.add('drop-active');
@@ -150,7 +151,7 @@
     });
 
    </script>
-   {% include "draw-canvas.html" %}
+    <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
 
 {% block content %}

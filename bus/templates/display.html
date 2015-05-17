@@ -9,20 +9,9 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript">
-    $(function() {
-        update_display = function() {
-            $.get("", {}, function(d) {
-                var txt = $(".container", $(d)).html();
-                console.log(txt);
-                $(".container").html(txt)
-            }, "text")
-        }
-
-
-    });
+    <script type="text/javascript" src="{% static 'js/update.js' %}">
     </script>
-    {% include "draw-canvas.html" %}
+    <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
 
 {% block content %}
