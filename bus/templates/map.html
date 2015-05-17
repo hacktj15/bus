@@ -83,16 +83,20 @@
             .draggable({
                 onmove: function(event) {
                     var target = event.target;
-                    x = event.pageX % 360;
+                    x = (event.pageX % 360);
 
-                    x = 236 - x;
+                    if(x > 350 || x < 10) x = 0;
+                    for(i=45; i<360; i += 45) {
+                        if(x > i - 10 && x < i + 10) x = i;
+                    }
+
                     var rotateCSS = 'rotate(' + x + 'deg)';
                     target.parentNode.setAttribute('data-rot', x);
 
                     target.parentNode.style.transform = rotateCSS;
                     target.parentNode.style.webkitTransform = rotateCSS;
                     target.parentNode.style.mozTransform = rotateCSS;
-                    
+                    $(".deg-count").show().html(x+"°");
                 },
                 onend: function(event) {
                     var target = event.target.parentNode,
@@ -104,6 +108,7 @@
                     if(!window.being_deleted) {
                         savePos(id, x, y, rot)
                     } else console.log("Being deleted!");
+                    $(".deg-count").hide();
 
                 }
             });
@@ -198,6 +203,7 @@
 {% block content %}
 
 <div class="container">
+<div class="deg-count"></div>
     <div class="slots">
     {% for slot in slots %}
         <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">

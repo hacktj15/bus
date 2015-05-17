@@ -83,3 +83,10 @@
 .bus.drop-current {
     opacity: 1;
 }
+
+.deg-count {
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    font-size: 24px;
+}
