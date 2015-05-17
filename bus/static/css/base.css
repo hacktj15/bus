@@ -25,6 +25,40 @@ nav ul.right {
     float: right;
 }
 
+
+a.navbar-brand {
+    color: white;
+}
+
+ul.nav li {
+    border-left: 1px solid #222;
+    border-right: 1px solid #222;
+}
+
+
+ul.nav li a.highlight {
+    color: white;
+}
+
+ul.nav li:hover a.highlight {
+    color: black;
+}
+
+ul.nav li a.nobg {
+    background: #222 !important;
+}
+
+
+ul.nav li:hover a.nobg.highlight {
+    color: white;
+}
+
+ul.nav li.selected a {
+    background-color: #eee;
+    color: #23527c;
+}
+
+
 @media (max-width: 767px) {
     .navbar-nav.right {
         float: none;
