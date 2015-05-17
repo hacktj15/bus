@@ -1,9 +1,14 @@
+import urllib.parse
+import base64
+import time
+import json
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.auth.views import logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from .models import BusInstance, Bus, County, Slot, Coordinate
+from .models import BusInstance, Bus, County, Slot, Coordinate, BusUser
 
 
 # Create your views here.
@@ -27,6 +32,8 @@ def display_view(request):
 
 @login_required
 def buses_view(request):
+    if not BusUser.is_admin(request.user):
+        return HttpResponseRedirect("/?permission_denied")
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
@@ -82,6 +89,8 @@ def buses_view(request):
 
 @login_required
 def map_view(request):
+    if not is_admin(request.user):
+        return HttpResponseRedirect("/?permission_denied")
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'remove_slot':
@@ -120,10 +129,40 @@ def map_view(request):
     }
     return render(request, "map.html", context)
 
+def gen_iodine_reqtoken():
+    data = {
+        "title": "Bus Locator",
+        "return": "http://127.0.0.1:8000/login",
+        "time": int(time.time()),
+        "exp": int(time.time() + 120),
+        "method": "GET" # REQUIRED due to requirement for csrftoken in POST
+    }
+
+    datastr = urllib.parse.urlencode(data)
+    reqtoken = base64.b64encode(datastr.encode('ascii'))
+
+    return reqtoken
+
+def process_iodine_token(sso):
+    url = "https://iodine.tjhsst.edu/ajax/sso/valid_key?sso={}".format(sso)
+    respstr = urllib.request.urlopen(url).read().decode('utf-8')
+    data = json.loads(respstr)
+    data = data["sso"]
+    if data["valid_key"]:
+        return HttpResponse("Hi, {}".format(data["username"]))
+
+    return HttpResponse(respstr)
+
+
 def login_view(request):
     """Displays the login page and processes authentication."""
 
     context = {}
+
+    if 'sso' in request.GET:
+        sso = request.GET.get('sso')
+        return process_iodine_token(sso)
+
     if request.method == 'POST':
         user = authenticate(username=request.POST.get('username'),
                             password=request.POST.get('password'))
@@ -133,6 +172,9 @@ def login_view(request):
             return HttpResponseRedirect('/buses')
         else:
             context["error"] = "Invalid username or password."
+
+
+    context["iodine_token"] = gen_iodine_reqtoken()
 
     return render(request, "login.html", context)
 

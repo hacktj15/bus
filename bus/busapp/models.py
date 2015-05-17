@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 class County(models.Model):
@@ -55,3 +55,19 @@ class BusInstance(models.Model):
 
     def __str__(self):
         return "{} - {}".format(self.bus, self.slot)
+
+
+class BusUser(models.Model):
+    user = models.OneToOneField(User)
+    admin = models.BooleanField(default=False)
+    student = models.BooleanField(default=True)
+    bus_name = models.CharField(max_length=64, default=False)
+
+    @classmethod
+    def is_admin(self, user):
+        try:
+            bususer = BusUser.objects.get(user=user)
+        except BusUser.DoesNotExist:
+            bususer = BusUser.objects.create(user=user)
+        return bususer.admin
+

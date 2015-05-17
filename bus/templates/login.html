@@ -7,11 +7,23 @@
 
 {% endblock %}
 
+{% block js %}
+	<script type="text/javascript">
+	iodine = function() {
+		location.href = "https://iodine.tjhsst.edu/sso?req={{ iodine_token }}"
+	}
+	</script>
+
+{% endblock %}
+
 {% block nav %}{% endblock %}
 
 {% block content %}
 <div class="login-card">
-	<h1>Login</h1><br>
+	<h1>Student Login</h1><br>
+	<button class="login login-submit" style="width: 100%" onclick="iodine()">Log in with Intranet</button>
+	<br />
+	<h1>Admin Login</h1><br>
 	{% if error %}{{ error }}{% endif %}
 	<form method="post" action="/login">
 	{% csrf_token %}
