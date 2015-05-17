@@ -115,6 +115,14 @@
             var x = 400, y = 400;
             var busid = $("#addfield").val();
             var busname = $("#addfield option[value='"+busid+"']").text();
+
+            // Check duplicates
+            $(".bus").each(function() {
+                if($(this).text().trim() == busname) {
+                    trashDrop(null, $(this).get(0));
+                }
+            });
+
             console.info("Created clientside bus:", busid, busname);
             $(".slots").append("<div class='bus' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-bus-id='"+busid+"'>"+busname+"</div>");
         });
