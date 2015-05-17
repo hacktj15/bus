@@ -11,7 +11,7 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/interact.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
   
@@ -71,8 +71,21 @@
                 drag.style.left = dropzone.style.left;
                 drag.style.top = dropzone.style.top;
                 drag.style.transform = dropzone.style.transform;
+
+                saveDrop(event.target, event.relatedTarget);
             }
-        })
+        });
+
+        saveDrop = function(dropzone, drag) {
+            console.log("saveDrop");
+            $.post("/modify", {
+                "action": "modify_pos",
+                "slotid": dropzone.getAttribute("data-slot-id"),
+                "busid": drag.getAttribute("data-bus-id")
+            }, function(d) {
+                console.log("response:", d)
+            });
+        }
 
 
         $("#addfield").selectize({
@@ -96,7 +109,7 @@
 <div class="container">
     <div class="slots">
     {% for slot in slots %}
-        <div class="slot" style="{{ slot.style }}" data-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
+        <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
         &nbsp;
         </div>
     {% endfor %}
@@ -107,7 +120,7 @@
         </div>
     {% endfor %}
 
-        <div class="trash">
+        <div class="trash slot">
             <i class="fa fa-trash"></i>
         </div>
 
