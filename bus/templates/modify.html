@@ -7,12 +7,14 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.structure.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.theme.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.css' %}" />
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
   
   <script>
   	$(function() {    
@@ -35,6 +37,10 @@
                 $(ui.draggable).css("transform", "rotate("+rot+"deg)")
             }
          });
+
+        $("#addfield").selectize({
+            create: false
+        })
     });
 
    </script>
@@ -57,10 +63,13 @@
     {% endfor %}
     </div>
 
-    <div class="buses">
-    <div class="bus">
-        test
-    </div>
+    <div class="addbus">
+        <select id="addfield" placeholder="Enter a bus name..">
+            <option value="">Enter a bus name..</option>
+        {% for bus in buses %}
+            <option value="{{ bus.id }}">{{ bus.name }}</option>
+        {% endfor %}
+        </select>
     </div>
 
 </div>
