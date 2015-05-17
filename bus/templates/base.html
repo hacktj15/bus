@@ -41,7 +41,7 @@
                     <li{% if loc == "display" %} class="selected"{% endif %}>
                         <a href="/display">Display</a>
                     </li>
-                {% if user.is_authenticated and user.is_admin %}
+                {% if user.is_authenticated and is_admin %}
                     
                     <li{% if loc == "buses" %} class="selected"{% endif %}>
                         <a href="/buses">Bus Management</a>

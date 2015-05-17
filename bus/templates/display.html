@@ -8,13 +8,23 @@
 
 {% block js %}
     {{ block.super }}
+    <script type="text/javascript">
+    $(function() {
+        update_display = function() {
+            $.get("", {}, function(d) {
+                var txt = $(".container", $(d)).html();
+                console.log(txt);
+                $(".container").html(txt)
+            }, "text")
+        }
+
+
+    });
+    </script>
     {% include "draw-canvas.html" %}
 {% endblock %}
 
 {% block content %}
-{% if splash %}
-
-{% endif %}
 <div class="container">
     <canvas id="lineCanvas" width="1110" height="500"></canvas>
 {% for inst in instances %}

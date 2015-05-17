@@ -67,7 +67,7 @@ class BusUser(models.Model):
     @classmethod
     def is_admin(self, user):
         try:
-            bususer = BusUser.objects.get(user=user)
+            bususer = BusUser.objects.get(user__id=user.id)
         except BusUser.DoesNotExist:
             bususer = BusUser.objects.create(user=user)
         return bususer.admin
