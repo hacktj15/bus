@@ -98,7 +98,7 @@
                 dict["busname"] = busname;
             }
 
-            $.post("/modify", dict, function(d) {
+            $.post("", dict, function(d) {
                 console.log("response:", d);
                 d = JSON.parse(d);
                 drag.setAttribute("data-inst-id", d["instid"]);
@@ -108,7 +108,7 @@
 
         trashDrop = function(dropzone, drag) {
             console.log("trashDrop");
-            $.post("/modify", {
+            $.post("", {
                 "action": "remove_inst",
                 "instid": drag.getAttribute("data-inst-id")
             }, function(d) {
