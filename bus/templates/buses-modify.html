@@ -16,7 +16,7 @@
     <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/interact.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
-  
+
   <script>
   	$(function() {
 
@@ -86,7 +86,7 @@
             }
         });
 
-        
+
         showNotif = function(text) {
              $(".message").show().append("<p>"+text+"</p>").click(function() { $(this).hide().html(""); });
         }
@@ -139,7 +139,7 @@
             var busid = $("#addfield").val();
             var busname = $("#addfield option[value='"+busid+"']").text();
 
-            if(busid.length == 0 || busname.length )            
+            if(busid.length == 0 || busname.length )
 
             // Check duplicates
             $(".bus").each(function() {
@@ -177,7 +177,7 @@
     });
 
    </script>
-    <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
+   <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -222,7 +222,7 @@
             </select>
             <button class="button" id="addbtn">Add</button>
         </div>
-        <div class="notifchange-outer">
+        <div class="notifchange-outer checkbox">
             <input type="checkbox" value=1 class="notifchange"{% if notify_setting %} checked{% endif %} /> Send notifications
         </div>
     </div>
