@@ -65,6 +65,14 @@
                 }
              });
 
+            $(".trash").droppable({
+                tolerance: "touch",
+                activeClass: "ui-state-default",
+                hoverClass: "ui-state-hover",
+                drop: function(event, ui) {
+                    $(ui.draggable).remove();
+                }
+             });
             $("#addfield").selectize({
                 create: true
             });
@@ -99,7 +107,11 @@
         </div>
     {% endfor %}
 
-    
+        <div class="trash">
+        &nbsp;
+        </div>
+        <!-- <div class="trash" style="{{ slot.style }}" data-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="50" data-y="50"> -->
+
     </div>
 
     <div class="addbus">
