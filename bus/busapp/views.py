@@ -71,15 +71,14 @@ def notify_twitter(status):
 
 
 def notify_bus(request, businst):
-    status = "{} has arrived on campus.".format(businst.bus.name)
-    #tw = notify_twitter(status)
-    tw = "{}"
+    status = "{} has now arrived on campus. ({})".format(businst.bus.name, time.strftime("%Y-%m-%d %H:%M:%S"))
+    tw = notify_twitter(status)
 
     users = BusUser.objects.filter(bus_name=businst.bus.name)
     for usr in users:
         secret.email_send(usr.user.email, status, "Find out now at http://busfinder.wogloms.com/")
 
-    return "{" + "'emailed': {}, 'twitter': {}".format(len(users), tw) + "}"
+    return "{" + '"emailed": {}, "twitter": {}'.format(len(users), tw) + "}"
 
 def get_notify_setting(request):
     return False if "notify" in request.session and request.session["notify"] else True

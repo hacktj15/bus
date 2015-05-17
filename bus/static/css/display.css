@@ -130,6 +130,18 @@
     }
 }
 
+.message {
+    position: fixed;
+    top: 95px;
+    left: 30%;
+    width: 40%;
+    background-color: yellow;
+    padding: 10px;
+    display: none;
+    z-index: 999;
+    cursor: pointer;
+}
+
 @media (max-width: 934px) {
     .container {
         zoom: 0.7;

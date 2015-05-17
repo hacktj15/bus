@@ -102,6 +102,11 @@
             $.post("", dict, function(d) {
                 console.log("response:", d);
                 d = JSON.parse(d);
+                if(d.notify) {
+                    $(".message").click(function() { $(this).hide().html(""); });
+                    if(d.notify.emailed) $(".message").show().append("Emailed to "+d.notify.emailed+" "+(d.notify.emailed == 1 ? 'person' : 'people')+".<br />")
+                    if(d.notify.twitter && !d.notify.twitter.errors) $(".message").show().append("Posted to Twitter.<br />")
+                }
                 drag.setAttribute("data-inst-id", d["instid"]);
                 drag.setAttribute("data-bus-id", d["busid"]);
             });
@@ -171,6 +176,7 @@
 {% block content %}
 
 <div class="container">
+    <div class="message"></div>
 
     {% include "positioning.html" %}
     <canvas id="lineCanvas" width="1110" height="500"></canvas>
