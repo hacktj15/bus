@@ -17,35 +17,64 @@
     <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
   
   <script>
-  	$(function() {    
-        $(".bus").draggable({
-            revert: function(event, ui) {
-                $(this).data("uiDraggable").originalPosition = {
-                    top: 0,
-                    left: 0
-                };
-                return !event;
-            }
-        });
-        $(".slot").droppable({
-            tolerance: "touch",
-            activeClass: "ui-state-default",
-            hoverClass: "ui-state-hover",
-            drop: function(event, ui) {
-                console.log("drop", event, ui);
-                var rot = $(this).attr("data-rot");
-                $(ui.draggable).css("transform", "rotate("+rot+"deg)");
-                var left = $(this).attr("data-x");
-                $(ui.draggable).css("left", left+"px");
-                var top = $(this).attr("data-y");
-                $(ui.draggable).css("top", top+"px");
-                console.log(rot, left, top);
-            }
-         });
+  	$(function() {
+        updateServ = function(busid, slotid) {
+            $.post("/modify", dat={
+                "action": "modify_pos",
+                "busid": busid,
+                "slotid": slotid,
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            }, function(d) {
+                console.log("server response:", d);
+            });
+            console.log(dat);
+        }
 
-        $("#addfield").selectize({
-            create: false
-        })
+        addDrag = function() { 
+            $(".bus").draggable({
+                revert: function(event, ui) {
+                    $(this).data("uiDraggable").originalPosition = {
+                        top: 400,
+                        left: 400
+                    };
+                    return !event;
+                }
+            });
+            $(".slot").droppable({
+                tolerance: "touch",
+                activeClass: "ui-state-default",
+                hoverClass: "ui-state-hover",
+                drop: function(event, ui) {
+                    console.log("drop", event, ui);
+                    var rot = $(this).attr("data-rot");
+                    $(ui.draggable).css("transform", "rotate("+rot+"deg)");
+                    var left = $(this).attr("data-x");
+                    $(ui.draggable).css("left", left+"px");
+                    var top = $(this).attr("data-y");
+                    $(ui.draggable).css("top", top+"px");
+                    console.log(rot, left, top);
+
+                    var bus_id = $(ui.draggable).attr("data-id");
+
+                    var slot_id = $(this).attr("data-id")
+
+                    updateServ(bus_id, slot_id);
+                }
+             });
+
+            $("#addfield").selectize({
+                create: false
+            });
+        }
+
+    addDrag()
+
+        $("#addbtn").click(function() {
+            var add_id = $("#addfield").val();
+            var add_text = $("#addfield option[value='"+add_id+"']").html();
+            $(".slots").append("<div class='bus' style='left: 400px;top: 400px' data-rot=0 data-x=400 data-y=400>"+add_text+"</div>");
+            addDrag();
+        });
     });
 
    </script>
@@ -56,13 +85,13 @@
 <div class="container">
     <div class="slots">
     {% for slot in slots %}
-        <div class="slot" style="{{ slot.style }}" data-rot="{{ slot.rotate }}">
+        <div class="slot" style="{{ slot.style }}" data-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
         &nbsp;
         </div>
     {% endfor %}
 
     {% for inst in instances %}
-        <div class="bus" style="{{ inst.slot.style }}" data-rot="{{ inst.slot.rotate }}">
+        <div class="bus" style="{{ inst.slot.style }}" data-id="{{ inst.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
         {{ inst.bus }}
         </div>
     {% endfor %}
@@ -71,12 +100,15 @@
     </div>
 
     <div class="addbus">
-        <select id="addfield" placeholder="Enter a bus name..">
-            <option value="">Enter a bus name..</option>
-        {% for bus in buses %}
-            <option value="{{ bus.id }}">{{ bus.name }}</option>
-        {% endfor %}
-        </select>
+        <div class="inner">
+            <select id="addfield" placeholder="Enter a bus name..">
+                <option value="">Enter a bus name..</option>
+            {% for bus in buses %}
+                <option value="{{ bus.id }}">{{ bus.name }}</option>
+            {% endfor %}
+            </select>
+            <button class="button" id="addbtn">Add</button>
+        </div>
     </div>
 
 </div>

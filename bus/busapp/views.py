@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login
 from .models import BusInstance, Bus, County, Slot, Coordinate
 
@@ -24,6 +24,19 @@ def display_view(request):
 
 
 def modify_view(request):
+
+    if request.method == 'POST' and 'action' in request.POST:
+        act = request.POST.get('action')
+        if act == 'modify_pos':
+            businst = BusInstance.objects.get_or_create(
+                bus=Bus.objects.get(id=request.POST.get('busid')),
+                arrived=False,
+                slot=Slot.objects.get(id=request.POST.get('slotid'))
+            )
+            return HttpResponse("ok")
+
+
+
     slots = list(Slot.objects.all())
     instances = BusInstance.objects.all()
     buses = Bus.objects.all()

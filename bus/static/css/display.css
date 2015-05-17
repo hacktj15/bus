@@ -32,7 +32,17 @@
     width: 100%;
 }
 
-.addbus select, .addbus .selectize-control {
+.addbus .inner select, .addbus .inner .selectize-control {
+    width: 430px;
+    display: inline-block;
+    float: left;
+}
+
+.addbus .inner .button {
+    margin-left: 10px;
+}
+
+.addbus .inner {
     width: 500px;
     margin-left: auto;
     margin-right: auto;
