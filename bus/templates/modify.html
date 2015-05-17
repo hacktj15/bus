@@ -3,11 +3,13 @@
 
 {% block css %}
     {{ block.super }}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/display.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.structure.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.theme.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.css' %}" />
+
 {% endblock %}
 
 {% block js %}
@@ -33,11 +35,13 @@
         addDrag = function() { 
             $(".bus").draggable({
                 revert: function(event, ui) {
-                    $(this).data("uiDraggable").originalPosition = {
-                        top: 400,
-                        left: 400
-                    };
-                    return !event;
+                    if($(this).data("uiDraggable")) {
+                        $(this).data("uiDraggable").originalPosition = {
+                            top: 400,
+                            left: 400
+                        };
+                        return !event;
+                    }
                 }
             });
             $(".slot").droppable({
@@ -70,9 +74,19 @@
                 activeClass: "ui-state-default",
                 hoverClass: "ui-state-hover",
                 drop: function(event, ui) {
+
+                    $.post("/modify", {
+                        "action": "remove_inst",
+                        "id": $(ui.draggable).attr("data-id"),
+                        "csrfmiddlewaretoken": "{{ csrf_token }}"
+                    }, function(d) {
+                        console.log(d);
+                    });
                     $(ui.draggable).remove();
+
                 }
              });
+
             $("#addfield").selectize({
                 create: true
             });
@@ -83,7 +97,7 @@
         $("#addbtn").click(function() {
             var add_id = $("#addfield").val();
             var add_text = $("#addfield option[value='"+add_id+"']").html();
-            $(".slots").append("<div class='bus' style='left: 400px;top: 400px' data-rot=0 data-x=400 data-y=400>"+add_text+"</div>");
+            $(".slots").append("<div class='bus' style='left: 400px;top: 400px' data-id='"+add_id+"' data-rot=0 data-x=400 data-y=400>"+add_text+"</div>");
             addDrag();
         });
     });
@@ -108,9 +122,8 @@
     {% endfor %}
 
         <div class="trash">
-        &nbsp;
+            <i class="fa fa-trash"></i>
         </div>
-        <!-- <div class="trash" style="{{ slot.style }}" data-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="50" data-y="50"> -->
 
     </div>
 

@@ -41,6 +41,11 @@ def modify_view(request):
             )
             return HttpResponse("ok")
 
+        if act == 'remove_inst':
+            inst = BusInstance.objects.get(id=request.POST.get('id'))
+            inst.delete()
+            return HttpResponse("ok")
+
 
 
     slots = Slot.objects.all()

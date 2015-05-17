@@ -48,3 +48,24 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+.trash {
+    visibility: hidden;
+    text-align: center;
+}
+
+.trash.ui-state-default {
+    position: absolute;
+    top: -50px;
+    width: 100%;
+    visibility: visible;
+}
+
+.trash.ui-state-hover {
+    background: red;
+}
+
+.trash > i {
+    color: black;
+    font-size: 32px;
+}
