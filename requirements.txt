@@ -1,4 +1,4 @@
 django
 django-extensions
 sendgrid
-python-twitter
+tweepy

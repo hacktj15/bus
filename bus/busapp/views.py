@@ -4,6 +4,8 @@ import time
 import json
 import string
 import random
+import requests
+from requests_oauthlib import OAuth1
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -11,6 +13,7 @@ from django.contrib.auth.views import logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import BusInstance, Bus, County, Slot, Coordinate, BusUser
+from bus import secret
 
 
 # Create your views here.
@@ -49,6 +52,31 @@ def display_view(request):
     }
     return render(request, "display.html", context)
 
+
+def notify_twitter(status):
+    url = 'https://api.twitter.com/1.1/statuses/update.json'
+
+    auth = OAuth1(secret.CONSUMER_KEY,
+                 secret.CONSUMER_SECRET,
+                 secret.ACCESS_TOKEN_KEY,
+                 secret.ACCESS_TOKEN_SECRET)
+
+    data = {
+        "status": status
+    }
+
+    req = requests.post(url, data=data, auth=auth)
+
+    return req.text
+
+
+def notify_bus(businst):
+    status = "{} has arrived on campus.".format(businst.bus.name)
+    tw = notify_twitter(status)
+
+    return tw
+
+
 @login_required
 def buses_view(request):
     if not BusUser.is_admin(request.user):
@@ -56,6 +84,7 @@ def buses_view(request):
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
+            new_bus = False
             if 'busid' in request.POST and request.POST.get('busid') != "new":
                 busid = request.POST.get('busid')
                 bus = Bus.objects.get(id=busid)
@@ -66,11 +95,20 @@ def buses_view(request):
             if len(oinsts) > 0:
                 for i in oinsts:
                     i.delete()
+            else:
+                new_bus = True
             businst = BusInstance.objects.get_or_create(
                 bus=bus,
                 arrived=False,
                 slot=Slot.objects.get(id=request.POST.get('slotid'))
             )
+
+            if new_bus:
+                notify = notify_bus(businst[0])
+                return HttpResponse("{"+('"instid":{}, "busid":{}, "notify":{}'.format(
+                    businst[0].id, bus.id, notify
+                ))+"}")
+
             return HttpResponse("{"+('"instid":{}, "busid":{}'.format(
                 businst[0].id, bus.id
             ))+"}")

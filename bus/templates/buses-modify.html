@@ -128,6 +128,8 @@
             var busid = $("#addfield").val();
             var busname = $("#addfield option[value='"+busid+"']").text();
 
+            if(busid.length == 0 || busname.length )            
+
             // Check duplicates
             $(".bus").each(function() {
                 if($(this).text().trim() == busname) {
@@ -148,6 +150,15 @@
                 });
             }
         });
+
+        getImage = function() {
+            html2canvas(document.querySelector(".container"), {
+              onrendered: function(canvas) {
+                img = canvas.toDataURL();
+              }
+            });
+
+        }
     });
 
    </script>
