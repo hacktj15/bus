@@ -16,13 +16,13 @@
 <div class="container">
     <canvas id="lineCanvas" width="1000" height="400"></canvas>
 {% for inst in instances %}
-    <div class="bus" style="{{ inst.slot.style }}">
+    <div class="bus" style="{{ inst.slot.style }}; opacity:1">
     {{ inst.bus }}
     </div>
 {% endfor %}
 
 {% for slot in slots %}
-    <div class="slot" style="{{ slot.style }}">
+    <div class="slot" style="{{ slot.style }}; opacity:0.3">
     </div>
 {% endfor %}
 
