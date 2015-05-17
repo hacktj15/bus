@@ -70,11 +70,16 @@ def notify_twitter(status):
     return req.text
 
 
-def notify_bus(businst):
+def notify_bus(request, businst):
     status = "{} has arrived on campus.".format(businst.bus.name)
-    tw = notify_twitter(status)
+    #tw = notify_twitter(status)
+    tw = "{}"
 
-    return tw
+    users = BusUser.objects.filter(bus_name=businst.bus.name)
+    for usr in users:
+        secret.email_send(usr.user.email, status, "Find out now at http://busfinder.wogloms.com/")
+
+    return "{" + "'emailed': {}, 'twitter': {}".format(len(users), tw) + "}"
 
 
 @login_required
@@ -104,7 +109,7 @@ def buses_view(request):
             )
 
             if new_bus:
-                notify = notify_bus(businst[0])
+                notify = notify_bus(request, businst[0])
                 return HttpResponse("{"+('"instid":{}, "busid":{}, "notify":{}'.format(
                     businst[0].id, bus.id, notify
                 ))+"}")

@@ -72,3 +72,6 @@ class BusUser(models.Model):
             bususer = BusUser.objects.create(user=user)
         return bususer.admin
 
+    def __str__(self):
+        return "{} ({})".format(self.user, self.tjusername)
+
