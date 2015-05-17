@@ -15,6 +15,7 @@ nav a.navbar-brand {
 
 nav.navbar-inverse a.navbar-brand {
     color: #4d90fe;
+    font-family: 'Open Sans';
 }
 
 nav > ul {
