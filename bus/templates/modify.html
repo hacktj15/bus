@@ -5,9 +5,6 @@
     {{ block.super }}
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/display.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.structure.min.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui.theme.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.css' %}" />
 
 {% endblock %}
@@ -15,91 +12,79 @@
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/interact.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
   
   <script>
   	$(function() {
-        updateServ = function(busid, slotid, busname) {
-            $.post("/modify", dat={
-                "action": "modify_pos",
-                "busid": busid,
-                "busname": busname,
-                "slotid": slotid,
-                "csrfmiddlewaretoken": "{{ csrf_token }}"
-            }, function(d) {
-                console.log("server response:", d);
-                var obj = $(".bus[data-bus-id="+busid+"]");
-                if(obj && !obj.attr("data-inst-id") && d.length > 0) {
-                    obj.attr("data-inst-id", d)
-                }
-            });
-            console.log("UPDATING:",dat);
+
+        interact('.bus')
+            .draggable({
+                intertia: true,
+                onmove: dragMoveListener
+            }
+        );
+
+        function dragMoveListener (event) {
+            var target = event.target,
+            // keep the dragged position in the data-x/data-y attributes
+            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+            // translate the element
+            target.style.left = x+"px";
+            target.style.top = y+"px";
+
+            // update the posiion attributes
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
         }
+        interact('.slot').dropzone({
+            accept: ".bus",
+            overlap: 0.1,
 
-        addDrag = function() { 
-            $(".bus").draggable({
-                revert: false
-            });
-            $(".slot").droppable({
-                tolerance: "touch",
-                activeClass: "ui-state-default",
-                hoverClass: "ui-state-hover",
-                drop: function(event, ui) {
-                    console.log("drop", event, ui);
-                    var rot = $(this).attr("data-rot");
-                    $(ui.draggable).css("transform", "rotate("+rot+"deg)");
-                    var left = $(this).attr("data-x");
-                    $(ui.draggable).css("left", left+"px");
-                    var top = $(this).attr("data-y");
-                    $(ui.draggable).css("top", top+"px");
-                    console.log(rot, left, top);
+            ondropactivate: function(event) {
+                event.target.classList.add('drop-active');
+                event.target.classList.remove('drop-current');
+                event.relatedTarget.classList.remove('drop-current');
+            },
+            ondragenter: function(event) {
+                var draggableElement = event.relatedTarget,
+                dropzoneElement = event.target;
 
-                    var bus_id = $(ui.draggable).attr("data-bus-id");
-                    var bus_name = $(ui.draggable).html().trim()
-                    
+                dropzoneElement.classList.add('drop-target');
+                draggableElement.classList.add('can-drop');
+                event.relatedTarget.classList.remove('cant-drop');
+            },
+            ondragleave: function(event) {
+                event.target.classList.remove('drop-target');
+                event.relatedTarget.classList.remove('can-drop');
+                event.relatedTarget.classList.add('cant-drop');
+            },
+            ondrop: function(event) {
+                event.target.classList.remove('drop-active');
+                event.target.classList.remove('drop-target');
+                event.target.classList.add('drop-current');
+                event.relatedTarget.classList.add('drop-current');
 
-                    var slot_id = $(this).attr("data-id")
+                var dropzone = event.target;
+                var drag = event.relatedTarget;
+                drag.style.left = dropzone.style.left;
+                drag.style.top = dropzone.style.top;
+                drag.style.transform = dropzone.style.transform;
+            }
+        })
 
-                    updateServ(bus_id, slot_id, bus_name);
-                }
-             });
 
-            $(".trash").droppable({
-                tolerance: "touch",
-                activeClass: "ui-state-default",
-                hoverClass: "ui-state-hover",
-                drop: function(event, ui) {
-
-                    $.post("/modify", {
-                        "action": "remove_inst",
-                        "id": $(ui.draggable).attr("data-inst-id"),
-                        "csrfmiddlewaretoken": "{{ csrf_token }}"
-                    }, function(d) {
-                        console.log(d);
-                    });
-                    $(ui.draggable).remove();
-
-                }
-             });
-
-            $("#addfield").selectize({
-                create: true,
-                positionDropdown: "up"
-            });
-        }
-
-    addDrag()
+        $("#addfield").selectize({
+            create: false
+        });
 
         $("#addbtn").click(function() {
-            var add_id = $("#addfield").val();
-            var add_text = $("#addfield option[value='"+add_id+"']").html();
-            if( (""+add_id).trim() == add_text.trim()) {
-                add_id = -1;
-            }
-            console.log("add", add_id, add_text)
-            $(".slots").append("<div class='bus' style='left: 400px;top: 400px' data-bus-id='"+add_id+"' data-inst-id='' data-rot=0 data-x=400 data-y=400>"+add_text+"</div>");
-            addDrag();
+            var x = 400, y = 400;
+            var busid = $("#addfield").val();
+            var busname = $("#addfield option[value='"+busid+"']").text();
+            console.info("Created clientside bus:", busid, busname);
+            $(".slots").append("<div class='bus' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-bus-id='"+busid+"'>"+busname+"</div>");
         });
     });
 
@@ -117,7 +102,7 @@
     {% endfor %}
 
     {% for inst in instances %}
-        <div class="bus" style="{{ inst.slot.style }}" data-inst-id="{{ inst.id }}" data-bus-id="{{ inst.bus.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
+        <div class="bus drop-current" style="{{ inst.slot.style }}" data-inst-id="{{ inst.id }}" data-bus-id="{{ inst.bus.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
         {{ inst.bus }}
         </div>
     {% endfor %}
