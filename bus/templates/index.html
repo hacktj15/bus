@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block title %}{{ block.super }} - Bus Display{% endblock %}
+
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/display.css' %}" />
