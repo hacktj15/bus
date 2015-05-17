@@ -15,6 +15,22 @@ from .models import BusInstance, Bus, County, Slot, Coordinate, BusUser
 
 # Create your views here.
 
+def index_view(request):
+    """Displays the list of buses."""
+
+    slots = Slot.objects.all()
+    instances = BusInstance.objects.all()
+
+    num = len(slots) + len(instances)
+
+    context = {
+        "slots": slots,
+        "instances": instances,
+        "num": num,
+        "loc": "display"
+    }
+    return render(request, "index.html", context)
+
 
 def display_view(request):
     """Displays the list of buses."""

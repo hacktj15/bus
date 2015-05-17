@@ -8,7 +8,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^$', 'busapp.views.display_view', name='index_view'),
+    url(r'^$', 'busapp.views.index_view', name='index_view'),
     url(r'^display$', 'busapp.views.display_view', name='display_view'),
     url(r'^buses$', 'busapp.views.buses_view', name='buses_view'),
     url(r'^map$', 'busapp.views.map_view', name='map_view'),

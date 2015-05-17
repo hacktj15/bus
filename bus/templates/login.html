@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block js %}
+	{{ block.super }}
 	<script type="text/javascript">
 	iodine = function() {
 		location.href = "https://iodine.tjhsst.edu/sso?req={{ iodine_token }}"
