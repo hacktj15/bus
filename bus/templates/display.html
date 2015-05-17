@@ -11,30 +11,27 @@
 
 {% block js %}
     {{ block.super }}
-    <script type="text/javascript" src="{% static 'js/update.js' %}">
-    </script>
+    <script type="text/javascript" src="{% static 'js/update.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
 
 {% block content %}
-<div class="container do-zoom">
-{% include "positioning.html" %}
+    <div class="container do-zoom">
+        {% include "positioning.html" %}
 
-    <canvas id="lineCanvas" width="1110" height="500"></canvas>
-{% for inst in instances %}
-    <div class="bus" style="{{ inst.slot.style }}; opacity:1">
-    {{ inst.bus }}
+        <canvas id="lineCanvas" width="1110" height="500"></canvas>
+        {% for inst in instances %}
+            <div class="bus" style="{{ inst.slot.style }}; opacity:1">
+                {{ inst.bus }}
+            </div>
+        {% endfor %}
+
+        {% for slot in slots %}
+            <div class="slot" style="{{ slot.style }}; opacity:0.3"></div>
+        {% endfor %}
+
+        {% if num == 0 %}
+            <b>There are no slots where buses can be contained.</b>
+        {% endif %}
     </div>
-{% endfor %}
-
-{% for slot in slots %}
-    <div class="slot" style="{{ slot.style }}; opacity:0.3">
-    </div>
-{% endfor %}
-
-{% if num == 0 %}
-    <b>There are no slots where buses can be contained.</b>
-{% endif %}
-
-</div>
 {% endblock %}

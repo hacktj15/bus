@@ -61,7 +61,7 @@
 
 .trash {
     position: fixed;
-    bottom: 10px;  
+    bottom: 10px;
     width: 100%;
     border: 0;
     left: 0;
@@ -115,9 +115,9 @@
 .message {
     position: fixed;
     top: 95px;
-    left: 30%;
+    /*left: 30%;
     width: 40%;
-    background-color: yellow;
+    background-color: yellow;*/
     padding: 10px;
     display: none;
     z-index: 999;
@@ -125,7 +125,6 @@
 }
 
 @media (max-width: 490px) {
-
     .container:not(.do-zoom) .addbus .inner {
         width: 320px;
     }

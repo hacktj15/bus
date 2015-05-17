@@ -17,9 +17,8 @@
     <script type="text/javascript" src="{% static 'js/interact.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
 
-  <script>
+    <script>
   	$(function() {
-
         interact('.bus')
             .draggable({
                 intertia: true,
@@ -86,7 +85,6 @@
             }
         });
 
-
         showNotif = function(text) {
              $(".message").show().append("<p>"+text+"</p>").click(function() { $(this).hide().html(""); });
         }
@@ -128,7 +126,6 @@
                 drag.remove();
             });
         }
-
 
         $("#addfield").selectize({
             create: true
@@ -175,57 +172,52 @@
         })
 
     });
-
-   </script>
-   <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
+    </script>
+    <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
 
 {% block content %}
+    <div class="container">
+        <div class="message alert alert-warning" role="alert"></div>
 
-<div class="container">
-    <div class="message"></div>
+        {% include "positioning.html" %}
 
-    {% include "positioning.html" %}
-    <canvas id="lineCanvas" width="1110" height="500"></canvas>
-    <div class="slots">
-    {% for slot in slots %}
-        <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
-        &nbsp;
-        </div>
-    {% endfor %}
-
-    {% for inst in instances %}
-        <div class="bus drop-current" style="{{ inst.slot.style }}" data-inst-id="{{ inst.id }}" data-bus-id="{{ inst.bus.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
-        {{ inst.bus }}
-        </div>
-    {% endfor %}
-
-
-    {% if num == 0 %}
-        <b>There are no slots where buses can be contained. Open the Configure Map view to add a slot.</b>
-    {% endif %}
-
-    </div>
-
-
-    <div class="trash slot">
-        <i class="fa fa-trash"></i>
-    </div>
-
-    <div class="addbus">
-        <div class="inner">
-            <select id="addfield" placeholder="Enter a bus name..">
-                <option value="">Enter a bus name..</option>
-            {% for bus in buses %}
-                <option value="{{ bus.id }}">{{ bus.name }}</option>
+        <canvas id="lineCanvas" width="1110" height="500"></canvas>
+        <div class="slots">
+            {% for slot in slots %}
+                <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
+                    &nbsp;
+                </div>
             {% endfor %}
-            </select>
-            <button class="button" id="addbtn">Add</button>
+
+            {% for inst in instances %}
+                <div class="bus drop-current" style="{{ inst.slot.style }}" data-inst-id="{{ inst.id }}" data-bus-id="{{ inst.bus.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
+                    {{ inst.bus }}
+                </div>
+            {% endfor %}
+
+            {% if num == 0 %}
+                <b>There are no slots where buses can be contained. Open the Configure Map view to add a slot.</b>
+            {% endif %}
         </div>
-        <div class="notifchange-outer checkbox">
-            <input type="checkbox" value=1 class="notifchange"{% if notify_setting %} checked{% endif %} /> Send notifications
+
+        <div class="trash slot">
+            <i class="fa fa-trash"></i>
+        </div>
+
+        <div class="addbus">
+            <div class="inner">
+                <select id="addfield" placeholder="Enter a bus name..">
+                    <option value="">Enter a bus name..</option>
+                    {% for bus in buses %}
+                        <option value="{{ bus.id }}">{{ bus.name }}</option>
+                    {% endfor %}
+                </select>
+                <button class="button" id="addbtn">Add</button>
+            </div>
+            <div class="notifchange-outer checkbox">
+                <input type="checkbox" value=1 class="notifchange"{% if notify_setting %} checked{% endif %} /> Send notifications
+            </div>
         </div>
     </div>
-
-</div>
 {% endblock %}
