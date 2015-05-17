@@ -169,9 +169,9 @@
 {% endblock %}
 
 {% block content %}
-<canvas id="lineCanvas" width="1000" height="400" style="margin-left: 10px"></canvas>
 
 <div class="container">
+    <canvas id="lineCanvas" width="1000" height="400"></canvas>
     <div class="slots">
     {% for slot in slots %}
         <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
