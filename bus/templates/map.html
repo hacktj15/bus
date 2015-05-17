@@ -6,67 +6,151 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/display.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.css' %}" />
+    <style type="text/css">
+    .trash {
+        visibility: visible;
+    }
+    </style>
 
 {% endblock %}
 
 {% block js %}
     {{ block.super }}
     <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/interact.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
   
   <script>
     $(function() {
 
+    doDrag = function() {
         interact('.slot')
             .draggable({
                 intertia: true,
-                onmove: dragMoveListener
+                onmove: function(event) {
+                    var target = event.target,
+                    // keep the dragged position in the data-x/data-y attributes
+                    x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                    y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    // translate the element
+                    target.style.left = x+"px";
+                    target.style.top = y+"px";
+
+                    // update the posiion attributes
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                },
+                onend: function(event) {
+                    var target = event.target,
+                    x = (parseFloat(target.getAttribute('data-x')) || 0),
+                    y = (parseFloat(target.getAttribute('data-y')) || 0),
+                    rot = target.getAttribute('data-rot'),
+                    id = target.getAttribute('data-slot-id');
+
+                    console.log("pos", x, y);
+
+                    savePos(id, x, y, rot)
+                }
             }
         );
 
-        function dragMoveListener (event) {
-            var target = event.target,
-            // keep the dragged position in the data-x/data-y attributes
-            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-            // translate the element
-            target.style.left = x+"px";
-            target.style.top = y+"px";
+        /* rotate */
+        $('<div></div>').appendTo(".slot").attr('class','handle').css({
+            'position': 'absolute',
+            'bottom': 0,
+            'right': 0,
+            'height': 15,
+            'width': 15,
+            'background-color': 'orange',
+            'z-index': 999
+        });
 
-            // update the posiion attributes
-            target.setAttribute('data-x', x);
-            target.setAttribute('data-y', y);
-        }
+        interact('.handle')
+            .draggable({
+                onmove: function(event) {
+                    var target = event.target;
+                    x = event.pageX % 360;
+                    var rotateCSS = 'rotate(' + x + 'deg)';
+                    target.parentNode.setAttribute('data-rot', x);
 
-        saveDrop = function(dropzone, drag) {
-            console.log("saveDrop");
-            var dict = {
-                "action": "modify_pos",
-                "slotid": dropzone.getAttribute("data-slot-id"),
-                "busid": drag.getAttribute("data-bus-id")
-            };
-            var busname = drag.innerText.trim();
+                    target.parentNode.style.transform = rotateCSS;
+                    target.parentNode.style.webkitTransform = rotateCSS;
+                    target.parentNode.style.mozTransform = rotateCSS;
+                },
+                onend: function(event) {
+                    var target = event.target.parentNode,
+                    x = (parseFloat(target.getAttribute('data-x')) || 0),
+                    y = (parseFloat(target.getAttribute('data-y')) || 0),
+                    rot = target.getAttribute('data-rot'),
+                    id = target.getAttribute('data-slot-id');
+                    console.log("rot", rot);
 
-            if(dict["busid"] == busname) {
-                // New entry
-                dict["busid"] = "new";
-                dict["busname"] = busname;
+                    savePos(id, x, y, rot)
+
+                }
+            });
+
+
+        interact('.trash').dropzone({
+            accept: ".slot",
+            overlap: 0.1,
+
+            ondropactivate: function(event) {
+                event.target.classList.add('drop-active');
+                event.target.classList.remove('drop-current');
+                event.relatedTarget.classList.remove('drop-current');
+            },
+            ondragenter: function(event) {
+                var draggableElement = event.relatedTarget,
+                dropzoneElement = event.target;
+
+                dropzoneElement.classList.add('drop-target');
+                draggableElement.classList.add('can-drop');
+                event.relatedTarget.classList.remove('cant-drop');
+            },
+            ondragleave: function(event) {
+                event.target.classList.remove('drop-target');
+                event.relatedTarget.classList.remove('can-drop');
+                event.relatedTarget.classList.add('cant-drop');
+            },
+            ondrop: function(event) {
+                event.target.classList.remove('drop-active');
+                event.target.classList.remove('drop-target');
+                event.target.classList.add('drop-current');
+                event.relatedTarget.classList.add('drop-current');
+
+                var dropzone = event.target;
+                var drag = event.relatedTarget;
+
+                console.log(dropzone.classList)
+                
+                trashDrop(event.target, event.relatedTarget);
+                
             }
+        });
+    }
 
-            $.post("/modify", dict, function(d) {
+    doDrag();
+
+        savePos = function(slotid, x, y, rot) {
+            console.log("savePos");
+            $.post("", {
+                "action": "save",
+                "slotid": slotid,
+                "x": x,
+                "y": y,
+                "rot": rot
+            }, function(d) {
                 console.log("response:", d);
-                d = JSON.parse(d);
-                drag.setAttribute("data-inst-id", d["instid"]);
-                drag.setAttribute("data-bus-id", d["busid"]);
             });
         }
 
         trashDrop = function(dropzone, drag) {
             console.log("trashDrop");
-            $.post("/modify", {
-                "action": "remove_inst",
-                "instid": drag.getAttribute("data-inst-id")
+            $.post("", {
+                "action": "remove_slot",
+                "slotid": drag.getAttribute("data-slot-id")
             }, function(d) {
                 console.log("response:", d);
                 drag.remove();
@@ -108,13 +192,7 @@
         </div>
     {% endfor %}
 
-    {% for inst in instances %}
-        <div class="bus drop-current" style="{{ inst.slot.style }}" data-inst-id="{{ inst.id }}" data-bus-id="{{ inst.bus.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
-        {{ inst.bus }}
-        </div>
-    {% endfor %}
-
-        <div class="trash slot">
+        <div class="trash">
             <i class="fa fa-trash"></i>
         </div>
 

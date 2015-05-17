@@ -74,6 +74,22 @@ def buses_view(request):
 
 @login_required
 def map_view(request):
+    if request.method == 'POST' and 'action' in request.POST:
+        act = request.POST.get('action')
+        if act == 'remove_slot':
+            slot = Slot.objects.get(id=request.POST.get('slotid'))
+            slot.delete()
+            return HttpResponse("ok")
+
+        if act == 'save':
+            slot = Slot.objects.get(id=request.POST.get('slotid'))
+            slot.rotate = request.POST.get('rot')
+            slot.coord.x = request.POST.get('x')
+            slot.coord.y = request.POST.get('y')
+            slot.coord.save()
+            slot.save()
+            return HttpResponse("{}".format(slot.id))
+
     slots = Slot.objects.all()
     context = {
         "slots": slots
@@ -90,7 +106,7 @@ def login_view(request):
 
         if user and user.is_active:
             login(request, user)
-            return HttpResponseRedirect('/modify')
+            return HttpResponseRedirect('/buses')
         else:
             context["error"] = "Invalid username or password."
 
