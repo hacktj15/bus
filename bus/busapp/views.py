@@ -25,7 +25,7 @@ def display_view(request):
     return render(request, "display.html", context)
 
 @login_required
-def modify_view(request):
+def buses_view(request):
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
@@ -70,7 +70,15 @@ def modify_view(request):
         "instances": instances,
         "buses": buses
     }
-    return render(request, "modify.html", context)
+    return render(request, "buses-modify.html", context)
+
+@login_required
+def map_view(request):
+    slots = Slot.objects.all()
+    context = {
+        "slots": slots
+    }
+    return render(request, "map.html", context)
 
 def login_view(request):
     """Displays the login page and processes authentication."""

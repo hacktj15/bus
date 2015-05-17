@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/display.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.css' %}" />
+
+{% endblock %}
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/jquery.cookie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/interact.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
+  
+  <script>
+    $(function() {
+
+        interact('.slot')
+            .draggable({
+                intertia: true,
+                onmove: dragMoveListener
+            }
+        );
+
+        function dragMoveListener (event) {
+            var target = event.target,
+            // keep the dragged position in the data-x/data-y attributes
+            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+            // translate the element
+            target.style.left = x+"px";
+            target.style.top = y+"px";
+
+            // update the posiion attributes
+            target.setAttribute('data-x', x);
+            target.setAttribute('data-y', y);
+        }
+
+        saveDrop = function(dropzone, drag) {
+            console.log("saveDrop");
+            var dict = {
+                "action": "modify_pos",
+                "slotid": dropzone.getAttribute("data-slot-id"),
+                "busid": drag.getAttribute("data-bus-id")
+            };
+            var busname = drag.innerText.trim();
+
+            if(dict["busid"] == busname) {
+                // New entry
+                dict["busid"] = "new";
+                dict["busname"] = busname;
+            }
+
+            $.post("/modify", dict, function(d) {
+                console.log("response:", d);
+                d = JSON.parse(d);
+                drag.setAttribute("data-inst-id", d["instid"]);
+                drag.setAttribute("data-bus-id", d["busid"]);
+            });
+        }
+
+        trashDrop = function(dropzone, drag) {
+            console.log("trashDrop");
+            $.post("/modify", {
+                "action": "remove_inst",
+                "instid": drag.getAttribute("data-inst-id")
+            }, function(d) {
+                console.log("response:", d);
+                drag.remove();
+            });
+        }
+
+
+        $("#addfield").selectize({
+            create: true
+        });
+
+        $("#addbtn").click(function() {
+            var x = 400, y = 400;
+            var busid = $("#addfield").val();
+            var busname = $("#addfield option[value='"+busid+"']").text();
+
+            // Check duplicates
+            $(".bus").each(function() {
+                if($(this).text().trim() == busname) {
+                    trashDrop(null, $(this).get(0));
+                }
+            });
+
+            console.info("Created clientside bus:", busid, busname);
+            $(".slots").append("<div class='bus' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-bus-id='"+busid+"'>"+busname+"</div>");
+        });
+    });
+
+   </script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="slots">
+    {% for slot in slots %}
+        <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
+        &nbsp;
+        </div>
+    {% endfor %}
+
+    {% for inst in instances %}
+        <div class="bus drop-current" style="{{ inst.slot.style }}" data-inst-id="{{ inst.id }}" data-bus-id="{{ inst.bus.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
+        {{ inst.bus }}
+        </div>
+    {% endfor %}
+
+        <div class="trash slot">
+            <i class="fa fa-trash"></i>
+        </div>
+
+    </div>
+
+    <div class="addbus">
+        <div class="inner">
+            <select id="addfield" placeholder="Enter a bus name..">
+                <option value="">Enter a bus name..</option>
+            {% for bus in buses %}
+                <option value="{{ bus.id }}">{{ bus.name }}</option>
+            {% endfor %}
+            </select>
+            <button class="button" id="addbtn">Add</button>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
