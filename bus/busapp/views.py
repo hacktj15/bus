@@ -56,6 +56,12 @@ def buses_view(request):
                 return HttpResponse("dne")
             return HttpResponse("ok")
 
+        if act == 'remove_all':
+            insts = BusInstance.objects.all()
+            for i in insts:
+                i.delete()
+            return HttpResponse("ok")
+
 
 
     slots = Slot.objects.all()

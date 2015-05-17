@@ -137,6 +137,16 @@
             console.info("Created clientside bus:", busid, busname);
             $(".slots").append("<div class='bus' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-bus-id='"+busid+"'>"+busname+"</div>");
         });
+
+        $(".trash").click(function() {
+            if(confirm("Pressing the trash button removes all currently stored buses. Are you sure you want to do this?")) {
+                $.post("", {
+                    "action": "remove_all"
+                }, function(d) {
+                    location.reload();
+                });
+            }
+        });
     });
 
    </script>
@@ -146,7 +156,7 @@
 {% block content %}
 
 <div class="container">
-    <canvas id="lineCanvas" width="1100" height="500"></canvas>
+    <canvas id="lineCanvas" width="1110" height="500"></canvas>
     <div class="slots">
     {% for slot in slots %}
         <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
