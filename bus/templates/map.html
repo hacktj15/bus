@@ -93,8 +93,8 @@
                         if(x > i - 10 && x < i + 10) x = i;
                     }
 
-                    if(x > 71-5 && x < 71+5) x = 71;
-                    if(x > 251-5 && x < 251+5) x = 251;
+                    if(x > 74-10 && x < 74+10) x = 74;
+                    if(x > 254-10 && x < 254+10) x = 254;
 
                     var rotateCSS = 'rotate(' + x + 'deg)';
                     target.parentNode.setAttribute('data-rot', x);
@@ -221,7 +221,7 @@
 {% block content %}
 
 <div class="container">
-    <canvas id="lineCanvas" width="1000" height="400"></canvas>
+    <canvas id="lineCanvas" width="1100" height="500"></canvas>
     <div class="deg-count"></div>
     <div class="slots">
     {% for slot in slots %}
