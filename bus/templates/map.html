@@ -32,6 +32,7 @@
   <script>
     $(function() {
 
+    window.being_deleted = false;
     doDrag = function() {
         interact('.slot')
             .draggable({
@@ -57,8 +58,9 @@
                     id = target.getAttribute('data-slot-id');
 
                     console.log("pos", x, y);
-
-                    savePos(id, x, y, rot)
+                    if(!window.being_deleted) {
+                        savePos(id, x, y, rot)
+                    } else console.log("Being deleted!");
                 }
             }
         );
@@ -98,7 +100,9 @@
                     rot = target.getAttribute('data-rot'),
                     id = target.getAttribute('data-slot-id');
                     console.log("rot", rot);
-                    savePos(id, x, y, rot)
+                    if(!window.being_deleted) {
+                        savePos(id, x, y, rot)
+                    } else console.log("Being deleted!");
 
                 }
             });
@@ -127,6 +131,7 @@
                 event.relatedTarget.classList.add('cant-drop');
             },
             ondrop: function(event) {
+                window.being_deleted = true;
                 event.target.classList.add('being-deleted');
                 event.target.classList.remove('drop-active');
                 event.target.classList.remove('drop-target');
@@ -147,12 +152,6 @@
 
         savePos = function(slotid, x, y, rot) {
             console.log("savePos");
-            console.log($("[data-slot-id="+slotid+"]"))
-            if($("[data-slot-id="+slotid+"]").hasClass("being-deleted")) {
-                console.log("Being deleted!")
-                return;
-            }
-
             $.post("", {
                 "action": "save",
                 "slotid": slotid,
@@ -172,6 +171,7 @@
             }, function(d) {
                 console.log("response:", d);
                 drag.remove();
+                window.being_deleted = !window.being_deleted;
             });
         }
 
