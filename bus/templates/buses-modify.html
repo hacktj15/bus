@@ -86,6 +86,11 @@
             }
         });
 
+        
+        showNotif = function(text) {
+             $(".message").show().append("<p>"+text+"</p>").click(function() { $(this).hide().html(""); });
+        }
+
         saveDrop = function(dropzone, drag) {
             console.log("saveDrop");
             var dict = {
@@ -105,9 +110,8 @@
                 console.log("response:", d);
                 d = JSON.parse(d);
                 if(d.notify) {
-                    $(".message").click(function() { $(this).hide().html(""); });
-                    if(d.notify.emailed) $(".message").show().append("Emailed to "+d.notify.emailed+" "+(d.notify.emailed == 1 ? 'person' : 'people')+".<br />")
-                    if(d.notify.twitter && !d.notify.twitter.errors) $(".message").show().append("Posted to Twitter.<br />")
+                    if(d.notify.emailed) showNotif("Emailed to "+d.notify.emailed+" "+(d.notify.emailed == 1 ? 'person' : 'people')+".")
+                    if(d.notify.twitter && !d.notify.twitter.errors) showNotif("Posted to Twitter.")
                 }
                 drag.setAttribute("data-inst-id", d["instid"]);
                 drag.setAttribute("data-bus-id", d["busid"]);
@@ -165,6 +169,7 @@
                 "action": "set_notify",
                 "notify": chk
             }, function(d) {
+                showNotif("Email and twitter notifications will "+(chk=='false'?"not ":"")+" be sent when a bus is added or removed.");
                 console.log("response:", d);
             });
         })

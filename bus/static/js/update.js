@@ -1,6 +1,6 @@
 $(function() {
 
-    var timeout_interval = 30 * 1000;
+    var timeout_interval = 10 * 1000;
     if(location.search.indexOf('timeout=') != -1) {
         timeout_interval = parseInt(location.search.split('timeout=')[1].split('&')[0]) * 1000
     }
