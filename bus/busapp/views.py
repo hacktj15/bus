@@ -51,7 +51,7 @@ def modify_view(request):
 
         if act == 'remove_inst':
             try:
-                inst = BusInstance.objects.get(id=request.POST.get('id'))
+                inst = BusInstance.objects.get(id=request.POST.get('instid'))
                 inst.delete()
             except BusInstance.DoesNotExist:
                 return HttpResponse("dne")

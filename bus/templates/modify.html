@@ -68,11 +68,18 @@
 
                 var dropzone = event.target;
                 var drag = event.relatedTarget;
-                drag.style.left = dropzone.style.left;
-                drag.style.top = dropzone.style.top;
-                drag.style.transform = dropzone.style.transform;
 
-                saveDrop(event.target, event.relatedTarget);
+                console.log(dropzone.classList)
+                if($.inArray("trash", dropzone.classList) != -1) {
+                    // Trash
+                    trashDrop(event.target, event.relatedTarget);
+                } else {
+                    drag.style.left = dropzone.style.left;
+                    drag.style.top = dropzone.style.top;
+                    drag.style.transform = dropzone.style.transform;
+
+                    saveDrop(event.target, event.relatedTarget);
+                }
             }
         });
 
@@ -83,7 +90,19 @@
                 "slotid": dropzone.getAttribute("data-slot-id"),
                 "busid": drag.getAttribute("data-bus-id")
             }, function(d) {
-                console.log("response:", d)
+                console.log("response:", d);
+                drag.setAttribute("data-inst-id", d);
+            });
+        }
+
+        trashDrop = function(dropzone, drag) {
+            console.log("trashDrop");
+            $.post("/modify", {
+                "action": "remove_inst",
+                "instid": drag.getAttribute("data-inst-id")
+            }, function(d) {
+                console.log("response:", d);
+                drag.remove();
             });
         }
 
