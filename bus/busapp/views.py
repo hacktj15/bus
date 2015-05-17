@@ -30,7 +30,7 @@ def index_view(request):
         "slots": slots,
         "instances": instances,
         "num": num,
-        "loc": "display",
+        "loc": "index",
         "iodine_token": gen_iodine_reqtoken()
     }
     return render(request, "index.html", context)
