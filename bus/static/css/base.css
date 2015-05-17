@@ -13,6 +13,10 @@ nav a.navbar-brand {
     font-size: 24px;
 }
 
+nav.navbar-inverse a.navbar-brand {
+    color: #4d90fe;
+}
+
 nav > ul {
     width: 100%;
 }
