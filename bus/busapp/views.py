@@ -167,10 +167,19 @@ def setup_iodine_user(username):
     return user
 
 def setup_view(request):
+    usr = BusUser.objects.get(user=request.user)
     context = {
-        "model": BusUser.objects.get(user=request.user),
+        "model": usr,
         "buses": Bus.objects.all()
     }
+
+    if request.method == 'POST':
+        busopt = request.POST.get('bus')
+        usr.bus_name = busopt
+        usr.save()
+        context["message"] = "Your preference was saved."
+
+    
     return render(request, "setup.html", context)
 
 def login_view(request):

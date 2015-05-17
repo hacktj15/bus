@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.css' %}" />
     <style type="text/css">
     .container {
-        margin-top: 40px;
+        margin-top: 60px;
     }
 
     h3 {
@@ -32,12 +32,18 @@
 
 {% block content %}
 <div class="container">
+    {% if message %}
+        <p>{{ message }}</p>
+        <p><a href="/logout">You may now log out.</a></p>
+    {% endif %}
     <h2>Hello, {{ model.tjusername }}!</h2>
     <h3>Which of these is your bus?</h3>
     <form action="" method="post">
-        <select name="bus" id="busselect">
+        {% csrf_token %}
+        <select name="bus" id="busselect" placeholder="Choose a bus..">
+        <option value="">Choose a bus..</option>
         {% for bus in buses %}
-            <option value="{{ bus.id }}">{{ bus }}</option>
+            <option value="{{ bus }}"{% if bus.name == model.bus_name %} selected{% endif %}>{{ bus }}</option>
         {% endfor %}
         </select>
         <p>By choosing your bus entry here, you will be sent email notifications whenever the location of your bus changes! These messages will be sent to <b>{{ user.email }}</b>.</p>
