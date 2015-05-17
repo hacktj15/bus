@@ -4,6 +4,45 @@
 {% block css %}
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static 'css/display.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
+    <style type="text/css">
+    .splash {
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        width: 50%;
+        height: 200px;
+        
+        text-shadow: 0 1px 0 #fff;
+        background-image: -webkit-linear-gradient(top,#e0e0e0 0,#fff 100%);
+        background-image: -o-linear-gradient(top,#e0e0e0 0,#fff 100%);
+        background-image: -webkit-gradient(linear,left top,left bottom,from(#e0e0e0),to(#fff));
+        background-image: linear-gradient(to bottom,#e0e0e0 0,#fff 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe0e0e0', endColorstr='#ffffffff', GradientType=0);
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+        background-repeat: repeat-x;
+        border-color: #dbdbdb;
+        border-color: #ccc;
+        padding: 20px;
+        z-index: 999;
+    }
+
+    .splash .x {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 10px;
+    }
+
+    .connectbtn {
+        display: block;
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    </style>
 {% endblock %}
 
 {% block js %}
@@ -12,6 +51,19 @@
 {% endblock %}
 
 {% block content %}
+<script type="text/javascript">
+iodine = function() {
+    location.href = "https://iodine.tjhsst.edu/sso?req={{ iodine_token }}"
+}
+</script>
+<div class="splash">
+    <div class="x" onclick="$(this).parent().remove()">x</div>
+    <h2>Welcome to BusFind.</h2>
+    <p>Current arrival information is listed below as it happens, in real-time. Connect with your TJ Intranet account and get email notifications whenever your bus arrives on campus.</p>
+    <button class="connectbtn login login-submit" onclick="iodine()">Log in with Intranet</button>
+</div>
+
+
 <div class="container">
     <canvas id="lineCanvas" width="1110" height="500"></canvas>
 {% for inst in instances %}
