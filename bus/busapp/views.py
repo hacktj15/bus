@@ -2,6 +2,8 @@ import urllib.parse
 import base64
 import time
 import json
+import string
+import random
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -149,10 +151,27 @@ def process_iodine_token(sso):
     data = json.loads(respstr)
     data = data["sso"]
     if data["valid_key"]:
-        return HttpResponse("Hi, {}".format(data["username"]))
+        return setup_iodine_user(data["username"])
 
     return HttpResponse(respstr)
 
+def setup_iodine_user(username):
+    # password is never used
+    try:
+        user = User.objects.get(username=username)
+    except User.DoesNotExist:
+        randpass = ''.join(random.SystemRandom().choice(string.ascii_uppercase) for _ in range(10))
+        user = User.objects.create_user(username=username, email="{}@tjhsst.edu".format(username), password=randpass)
+
+    obj = BusUser.objects.get_or_create(tjusername=username, user=user)
+    return user
+
+def setup_view(request):
+    context = {
+        "model": BusUser.objects.get(user=request.user),
+        "buses": Bus.objects.all()
+    }
+    return render(request, "setup.html", context)
 
 def login_view(request):
     """Displays the login page and processes authentication."""
@@ -161,7 +180,11 @@ def login_view(request):
 
     if 'sso' in request.GET:
         sso = request.GET.get('sso')
-        return process_iodine_token(sso)
+        user = process_iodine_token(sso)
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
+
+        return HttpResponseRedirect("/setup")
 
     if request.method == 'POST':
         user = authenticate(username=request.POST.get('username'),

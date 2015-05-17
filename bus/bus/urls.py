@@ -14,5 +14,6 @@ urlpatterns = patterns('',
     url(r'^map$', 'busapp.views.map_view', name='map_view'),
     url(r'^login$', 'busapp.views.login_view', name='login_view'),
     url(r'^accounts/login/$', 'busapp.views.login_view', name='login_view'),
-    url(r'^logout$', 'busapp.views.logout_view', name='logout_view')
+    url(r'^logout$', 'busapp.views.logout_view', name='logout_view'),
+    url(r'^setup$', 'busapp.views.setup_view', name='setup_view')
 )

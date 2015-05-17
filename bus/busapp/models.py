@@ -58,7 +58,8 @@ class BusInstance(models.Model):
 
 
 class BusUser(models.Model):
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, null=False)
+    tjusername = models.CharField(max_length=64, null=True)
     admin = models.BooleanField(default=False)
     student = models.BooleanField(default=True)
     bus_name = models.CharField(max_length=64, default=False)
