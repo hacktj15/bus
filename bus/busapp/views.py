@@ -205,7 +205,7 @@ def map_view(request):
 def gen_iodine_reqtoken(request):
     data = {
         "title": "Bus Locator",
-        "return": request.build_absolute_uri('/login'),
+        "return": "http://busfinder.wogloms.com/login" if secret.PRODUCTION else request.build_absolute_uri('/login'),
         "time": int(time.time()),
         "exp": int(time.time() + 120),
         "method": "GET" # REQUIRED due to requirement for csrftoken in POST
