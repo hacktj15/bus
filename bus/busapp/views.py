@@ -108,7 +108,7 @@ def buses_view(request):
 
 @login_required
 def map_view(request):
-    if not is_admin(request.user):
+    if not BusUser.is_admin(request.user):
         return HttpResponseRedirect("/?permission_denied")
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
