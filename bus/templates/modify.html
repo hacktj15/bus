@@ -16,10 +16,24 @@
   
   <script>
   	$(function() {    
-        $( ".bus" ).draggable({ revert: "invalid" });
-        $( ".slot" ).droppable({
-          activeClass: "ui-state-default",
-          hoverClass: "ui-state-hover"
+        $(".bus").draggable({
+            revert: function(event, ui) {
+                $(this).data("uiDraggable").originalPosition = {
+                    top: 0,
+                    left: 0
+                };
+                return !event;
+            }
+        });
+        $(".slot").droppable({
+            tolerance: "touch",
+            activeClass: "ui-state-default",
+            hoverClass: "ui-state-hover",
+            drop: function(event, ui) {
+                console.log("drop", event, ui);
+                var rot = $(this).attr("data-rot");
+                $(ui.draggable).css("transform", "rotate("+rot+"deg)")
+            }
          });
     });
 
@@ -31,13 +45,13 @@
 <div class="container">
     <div class="slots">
     {% for inst in instances %}
-        <div class="bus" style="{{ inst.slot.style }}">
+        <div class="bus" style="{{ inst.slot.style }}" data-rot="{{ inst.slot.rotate }}">
         {{ inst.bus }}
         </div>
     {% endfor %}
 
     {% for slot in slots %}
-        <div class="slot" style="{{ slot.style }}">
+        <div class="slot" style="{{ slot.style }}" data-rot="{{ slot.rotate }}">
         &nbsp;
         </div>
     {% endfor %}
