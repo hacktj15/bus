@@ -140,32 +140,7 @@
     });
 
    </script>
-
-   <script>
-    $(function() {
-        var c = document.getElementById("lineCanvas");
-        console.log(c);
-        var ctx = c.getContext("2d");
-        ctx.beginPath();
-        ctx.moveTo(935, 150);
-        ctx.lineTo(1000, 350);
-        ctx.stroke();
-
-        var left = 935;
-        var right = 1000;
-
-        for (var i = 0; i < 13; i++) 
-        {
-            left = left - 65;
-            right = right - 65;
-            var ptx = c.getContext("2d");
-            ptx.beginPath();
-            ptx.moveTo(left, 150);
-            ptx.lineTo(right, 350);
-            ptx.stroke();
-        };
-    });
-</script>
+   {% include "draw-canvas.html" %}
 {% endblock %}
 
 {% block content %}

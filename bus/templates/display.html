@@ -8,11 +8,13 @@
 
 {% block js %}
     {{ block.super }}
+    {% include "draw-canvas.html" %}
 {% endblock %}
 
 {% block content %}
 
 <div class="container">
+    <canvas id="lineCanvas" width="1000" height="400"></canvas>
 {% for inst in instances %}
     <div class="bus" style="{{ inst.slot.style }}">
     {{ inst.bus }}
