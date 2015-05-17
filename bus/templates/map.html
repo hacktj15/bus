@@ -98,7 +98,6 @@
                     rot = target.getAttribute('data-rot'),
                     id = target.getAttribute('data-slot-id');
                     console.log("rot", rot);
-
                     savePos(id, x, y, rot)
 
                 }
@@ -128,6 +127,7 @@
                 event.relatedTarget.classList.add('cant-drop');
             },
             ondrop: function(event) {
+                event.target.classList.add('being-deleted');
                 event.target.classList.remove('drop-active');
                 event.target.classList.remove('drop-target');
                 event.target.classList.add('drop-current');
@@ -137,7 +137,6 @@
                 var drag = event.relatedTarget;
 
                 console.log(dropzone.classList)
-                
                 trashDrop(event.target, event.relatedTarget);
                 
             }
@@ -148,6 +147,12 @@
 
         savePos = function(slotid, x, y, rot) {
             console.log("savePos");
+            console.log($("[data-slot-id="+slotid+"]"))
+            if($("[data-slot-id="+slotid+"]").hasClass("being-deleted")) {
+                console.log("Being deleted!")
+                return;
+            }
+
             $.post("", {
                 "action": "save",
                 "slotid": slotid,

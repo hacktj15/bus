@@ -158,10 +158,16 @@
         </div>
     {% endfor %}
 
-        <div class="trash slot">
-            <i class="fa fa-trash"></i>
-        </div>
 
+    {% if num == 0 %}
+        <b>There are no slots where buses can be contained. Open the Configure Map view to add a slot.</b>
+    {% endif %}
+
+    </div>
+
+    
+    <div class="trash slot">
+        <i class="fa fa-trash"></i>
     </div>
 
     <div class="addbus">

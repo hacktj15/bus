@@ -15,12 +15,12 @@ def display_view(request):
     slots = Slot.objects.all()
     instances = BusInstance.objects.all()
 
-    #for inst in instances:
-    #    slots.remove(inst.slot)
+    num = len(slots) + len(instances)
 
     context = {
         "slots": slots,
-        "instances": instances
+        "instances": instances,
+        "num": num
     }
     return render(request, "display.html", context)
 
@@ -62,13 +62,13 @@ def buses_view(request):
     instances = BusInstance.objects.all()
     buses = Bus.objects.all()
 
-    #for inst in instances:
-    #    slots.remove(inst.slot)
+    num = len(slots) + len(instances)
 
     context = {
         "slots": slots,
         "instances": instances,
-        "buses": buses
+        "buses": buses,
+        "num": num
     }
     return render(request, "buses-modify.html", context)
 
