@@ -92,6 +92,7 @@
                     target.parentNode.style.transform = rotateCSS;
                     target.parentNode.style.webkitTransform = rotateCSS;
                     target.parentNode.style.mozTransform = rotateCSS;
+                    
                 },
                 onend: function(event) {
                     var target = event.target.parentNode,
@@ -160,6 +161,7 @@
                 "rot": rot
             }, function(d) {
                 console.log("response:", d);
+                $(".slot[data-slot-id="+slotid+"]").attr("data-slot-id", d);
             });
         }
 
@@ -199,7 +201,7 @@
     <div class="slots">
     {% for slot in slots %}
         <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
-        &nbsp;
+        &nbsp;{{ slot.id }}
         </div>
     {% endfor %}
 
