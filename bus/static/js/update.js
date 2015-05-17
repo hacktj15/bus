@@ -2,8 +2,9 @@ $(function() {
 
     var timeout_interval = 30 * 1000;
     if(location.search.indexOf('timeout=') != -1) {
-        timeout_interval = parseInt(location.search.split('timeout=')[1]) * 1000
+        timeout_interval = parseInt(location.search.split('timeout=')[1].split('&')[0]) * 1000
     }
+
     console.log("timeout interval=", timeout_interval)
     update_display = function() {
         $.get("", {}, function(d) {
@@ -15,7 +16,9 @@ $(function() {
         }, "text")
     }
 
-    setInterval(update_display, timeout_interval)
+    if(timeout_interval > 0) {
+        setInterval(update_display, timeout_interval)
+    }
 
 
 });
