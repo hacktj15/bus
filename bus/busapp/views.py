@@ -31,7 +31,7 @@ def index_view(request):
         "instances": instances,
         "num": num,
         "loc": "index",
-        "iodine_token": gen_iodine_reqtoken()
+        "iodine_token": gen_iodine_reqtoken(request)
     }
     return render(request, "index.html", context)
 
@@ -202,10 +202,10 @@ def map_view(request):
     }
     return render(request, "map.html", context)
 
-def gen_iodine_reqtoken():
+def gen_iodine_reqtoken(request):
     data = {
         "title": "Bus Locator",
-        "return": "http://127.0.0.1:8000/login",
+        "return": request.build_absolute_uri('/login'),
         "time": int(time.time()),
         "exp": int(time.time() + 120),
         "method": "GET" # REQUIRED due to requirement for csrftoken in POST
@@ -277,7 +277,7 @@ def login_view(request):
             context["error"] = "Invalid username or password."
 
 
-    context["iodine_token"] = gen_iodine_reqtoken()
+    context["iodine_token"] = gen_iodine_reqtoken(request)
 
     return render(request, "login.html", context)
 
