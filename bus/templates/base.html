@@ -26,12 +26,25 @@
             <ul class="nav navbar-nav{% block nav-style %}{% endblock %}">
             {% block nav %}
                 {% if user.is_authenticated %}
-                    <li><a href="/display">Display</a></li>
-                    <li><a href="/buses">Bus Management</a></li>
-                    <li><a href="/map">Configure Map</a></li>
+                    <li{% if loc == "display" %} class="selected"{% endif %}>
+                        <a href="/display">Display</a>
+                    </li>
+                    <li{% if loc == "buses" %} class="selected"{% endif %}>
+                        <a href="/buses">Bus Management</a>
+                    </li>
+                    <li{% if loc == "map" %} class="selected"{% endif %}>
+                        <a href="/map">Configure Map</a>
+                    </li>
                 </ul>
                 <ul class="nav navbar-nav right">
-                    <li><a href="/logout">Logout</a></li>
+                    <li>
+                        <a class="nobg highlight">
+                            <i class="fa fa-user"></i> {{ user }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/logout" class="highlight">Logout</a>
+                    </li>
                 {% else %}
             </ul>
             <ul class="nav navbar-nav right">

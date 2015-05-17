@@ -20,7 +20,8 @@ def display_view(request):
     context = {
         "slots": slots,
         "instances": instances,
-        "num": num
+        "num": num,
+        "loc": "display"
     }
     return render(request, "display.html", context)
 
@@ -74,7 +75,8 @@ def buses_view(request):
         "slots": slots,
         "instances": instances,
         "buses": buses,
-        "num": num
+        "num": num,
+        "loc": "buses"
     }
     return render(request, "buses-modify.html", context)
 
@@ -113,7 +115,8 @@ def map_view(request):
 
     slots = Slot.objects.all()
     context = {
-        "slots": slots
+        "slots": slots,
+        "loc": "map"
     }
     return render(request, "map.html", context)
 
