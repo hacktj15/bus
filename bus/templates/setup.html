@@ -36,8 +36,7 @@
 <div class="container">
     {% if message %}
         <div class="alert alert-success" role="alert">
-            <p>{{ message }}</p>
-            <p><a href="/logout">You may now log out.</a></p>
+            <p><b>{{ message }}</b>, <a href="/logout">You may now log out.</a></p>
         </div>
     {% endif %}
     <h2>Hello, {{ model.tjusername }}!</h2>
