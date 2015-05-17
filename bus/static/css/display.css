@@ -2,6 +2,10 @@
 .container {
     position: relative;
     top: 50px;
+
+    width: 100%;
+    overflow-x: auto;
+    height: 700px;
 }
 
 a.navbar-brand {
@@ -126,5 +130,55 @@ ul.nav li.selected a {
 #lineCanvas {
     position: absolute;
     z-index: -1;
-    margin-left: 0;
+    margin-left: 50px;
+}
+
+@media (max-width: 1170px) {
+    .content {
+        zoom: 0.9
+    }
+
+    .addbus, .container {
+        top: 61px;
+    }
+}
+
+@media (max-width: 1050px) {
+    .content {
+        zoom: 0.8;
+    }
+
+    .addbus, .container {
+        top: 65px;
+    }
+}
+
+@media (max-width: 934px) {
+    .content {
+        zoom: 0.7;
+    }
+
+    .addbus, .container {
+        top: 75px;
+    }
+}
+
+@media (max-width: 817px) {
+    .content {
+        zoom: 0.6;
+    }
+
+    .addbus, .container {
+        top: 90px;
+    }
+}
+
+@media (max-width: 700px) {
+    .content {
+        zoom: 0.5;
+    }
+
+    .addbus, .container {
+        top: 105px;
+    }
 }
