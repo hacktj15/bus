@@ -34,28 +34,12 @@
                     obj.attr("data-inst-id", d)
                 }
             });
-            console.log(dat);
+            console.log("UPDATING:",dat);
         }
 
         addDrag = function() { 
             $(".bus").draggable({
-                revert: function(event, ui) {
-                    if($(this).data("uiDraggable")) {
-                        $.post("/modify", {
-                            "action": "remove_inst",
-                            "id": $(this).attr("data-inst-id"),
-                            "csrfmiddlewaretoken": "{{ csrf_token }}"
-                        }, function(d) {
-                            console.log(d);
-                        });
-                        $(this).remove();
-                        /*$(this).data("uiDraggable").originalPosition = {
-                            top: 400,
-                            left: 400
-                        };*/
-                        return !event;
-                    }
-                }
+                revert: false
             });
             $(".slot").droppable({
                 tolerance: "touch",
