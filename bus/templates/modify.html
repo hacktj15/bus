@@ -41,10 +41,18 @@
             $(".bus").draggable({
                 revert: function(event, ui) {
                     if($(this).data("uiDraggable")) {
-                        $(this).data("uiDraggable").originalPosition = {
+                        $.post("/modify", {
+                            "action": "remove_inst",
+                            "id": $(this).attr("data-inst-id"),
+                            "csrfmiddlewaretoken": "{{ csrf_token }}"
+                        }, function(d) {
+                            console.log(d);
+                        });
+                        $(this).remove();
+                        /*$(this).data("uiDraggable").originalPosition = {
                             top: 400,
                             left: 400
-                        };
+                        };*/
                         return !event;
                     }
                 }
@@ -92,7 +100,8 @@
              });
 
             $("#addfield").selectize({
-                create: true
+                create: true,
+                positionDropdown: "up"
             });
         }
 

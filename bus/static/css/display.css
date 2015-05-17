@@ -27,7 +27,7 @@
 
 .addbus {
     position: fixed;
-    bottom: 0;
+    top: 55px;
     left: 0;
     height: 100px;
     width: 100%;
@@ -56,7 +56,7 @@
 
 .trash.ui-state-default {
     position: absolute;
-    top: -50px;
+    top: -30px;
     width: 100%;
     visibility: visible;
 }
