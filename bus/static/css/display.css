@@ -39,6 +39,7 @@
 
 .notifchange-outer {
     float: right;
+    margin-right: 5px;
 }
 
 .addbus .inner select, .addbus .inner .selectize-control, .addbus .inner .selectize-control input {
