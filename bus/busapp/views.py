@@ -1,6 +1,8 @@
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
-from django.contrib.auth import authenticate, login
 from .models import BusInstance, Bus, County, Slot, Coordinate
 
 
@@ -22,9 +24,8 @@ def display_view(request):
     }
     return render(request, "display.html", context)
 
-
+@login_required
 def modify_view(request):
-
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
@@ -86,3 +87,6 @@ def login_view(request):
             context["error"] = "Invalid username or password."
 
     return render(request, "login.html", context)
+
+def logout_view(request):
+    return logout(request, next_page="/")

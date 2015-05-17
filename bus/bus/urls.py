@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 
     url(r'^$', 'busapp.views.display_view', name='index_view'),
     url(r'^display$', 'busapp.views.display_view', name='display_view'),
+    url(r'^modify$', 'busapp.views.modify_view', name='modify_view'),
     url(r'^login$', 'busapp.views.login_view', name='login_view'),
-    url(r'^modify$', 'busapp.views.modify_view', name='modify_view')
+    url(r'^logout$', 'busapp.views.logout_view', name='logout_view')
 )
