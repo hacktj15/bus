@@ -34,7 +34,12 @@
             drop: function(event, ui) {
                 console.log("drop", event, ui);
                 var rot = $(this).attr("data-rot");
-                $(ui.draggable).css("transform", "rotate("+rot+"deg)")
+                $(ui.draggable).css("transform", "rotate("+rot+"deg)");
+                var left = $(this).attr("data-x");
+                $(ui.draggable).css("left", left+"px");
+                var top = $(this).attr("data-y");
+                $(ui.draggable).css("top", top+"px");
+                console.log(rot, left, top);
             }
          });
 
@@ -55,7 +60,7 @@
         &nbsp;
         </div>
     {% endfor %}
-    
+
     {% for inst in instances %}
         <div class="bus" style="{{ inst.slot.style }}" data-rot="{{ inst.slot.rotate }}">
         {{ inst.bus }}
