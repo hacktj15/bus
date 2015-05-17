@@ -71,12 +71,12 @@
         /* rotate */
         $(".slot").each(function() {
             if($(".handle", $(this)).length == 0) {
-                $('<div></div>').appendTo($(this)).attr('class','handle').css({
+                $('<div><i class="fa fa-rotate-left" style="position:absolute; top:14px;left:14px"></i></div>').appendTo($(this)).attr('class','handle').css({
                     'position': 'absolute',
                     'bottom': 0,
                     'right': 0,
-                    'height': 15,
-                    'width': 15,
+                    'height': 40,
+                    'width': 40,
                     'background-color': 'orange',
                     'z-index': 999
                 });
@@ -86,7 +86,7 @@
             .draggable({
                 onmove: function(event) {
                     var target = event.target;
-                    x = (event.pageX % 360);
+                    x = (0 + event.pageX) % 360;
 
                     if(x > 350 || x < 10) x = 0;
                     for(i=45; i<360; i += 45) {

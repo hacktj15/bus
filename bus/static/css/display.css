@@ -133,6 +133,10 @@ ul.nav li.selected a {
     margin-left: 50px;
 }
 
+.addbus, .addbus .selectize-control, .addbus .selectize-control > div, .selectize-control > div > * {
+    z-index: 99;
+}
+
 @media (max-width: 1170px) {
     .content {
         zoom: 0.9
