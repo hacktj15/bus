@@ -17,7 +17,7 @@ class Bus(models.Model):
     county = models.ForeignKey(County, null=True, blank=True)
 
     def __str__(self):
-        return "{} ({})".format(self.name, self.county)
+        return "{}".format(self.name, self.county)
 
 class Coordinate(models.Model):
     """Represents an (x, y) coordinate."""

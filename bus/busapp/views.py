@@ -10,11 +10,11 @@ from .models import BusInstance, Bus, County, Slot, Coordinate
 def display_view(request):
     """Displays the list of buses."""
 
-    slots = list(Slot.objects.all())
+    slots = Slot.objects.all()
     instances = BusInstance.objects.all()
 
-    for inst in instances:
-        slots.remove(inst.slot)
+    #for inst in instances:
+    #    slots.remove(inst.slot)
 
     context = {
         "slots": slots,
@@ -28,8 +28,14 @@ def modify_view(request):
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
+            try:
+                bus = Bus.objects.get(id=request.POST.get('busid'))
+            except (Bus.DoesNotExist, ValueError):
+                # is title
+                bus = Bus.objects.create(name=request.POST.get('busid'))
+
             businst = BusInstance.objects.get_or_create(
-                bus=Bus.objects.get(id=request.POST.get('busid')),
+                bus=bus,
                 arrived=False,
                 slot=Slot.objects.get(id=request.POST.get('slotid'))
             )
@@ -37,12 +43,12 @@ def modify_view(request):
 
 
 
-    slots = list(Slot.objects.all())
+    slots = Slot.objects.all()
     instances = BusInstance.objects.all()
     buses = Bus.objects.all()
 
-    for inst in instances:
-        slots.remove(inst.slot)
+    #for inst in instances:
+    #    slots.remove(inst.slot)
 
     context = {
         "slots": slots,

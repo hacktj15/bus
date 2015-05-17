@@ -55,6 +55,9 @@
                     console.log(rot, left, top);
 
                     var bus_id = $(ui.draggable).attr("data-id");
+                    if(!bus_id) {
+                        bus_id = $(ui.draggable).html().trim()
+                    }
 
                     var slot_id = $(this).attr("data-id")
 
@@ -63,7 +66,7 @@
              });
 
             $("#addfield").selectize({
-                create: false
+                create: true
             });
         }
 
