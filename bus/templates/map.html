@@ -10,6 +10,14 @@
     .trash {
         visibility: visible;
     }
+
+    .addbus .inner {
+        width: 120px;
+        text-align: center;
+    }
+    .addbus .inner .button {
+        margin-left: 0;
+    }
     </style>
 
 {% endblock %}
@@ -56,21 +64,26 @@
         );
 
         /* rotate */
-        $('<div></div>').appendTo(".slot").attr('class','handle').css({
-            'position': 'absolute',
-            'bottom': 0,
-            'right': 0,
-            'height': 15,
-            'width': 15,
-            'background-color': 'orange',
-            'z-index': 999
+        $(".slot").each(function() {
+            if($(".handle", $(this)).length == 0) {
+                $('<div></div>').appendTo($(this)).attr('class','handle').css({
+                    'position': 'absolute',
+                    'bottom': 0,
+                    'right': 0,
+                    'height': 15,
+                    'width': 15,
+                    'background-color': 'orange',
+                    'z-index': 999
+                });
+            }
         });
-
         interact('.handle')
             .draggable({
                 onmove: function(event) {
                     var target = event.target;
                     x = event.pageX % 360;
+
+                    x = 236 - x;
                     var rotateCSS = 'rotate(' + x + 'deg)';
                     target.parentNode.setAttribute('data-rot', x);
 
@@ -164,18 +177,11 @@
 
         $("#addbtn").click(function() {
             var x = 400, y = 400;
-            var busid = $("#addfield").val();
-            var busname = $("#addfield option[value='"+busid+"']").text();
-
-            // Check duplicates
-            $(".bus").each(function() {
-                if($(this).text().trim() == busname) {
-                    trashDrop(null, $(this).get(0));
-                }
-            });
-
-            console.info("Created clientside bus:", busid, busname);
-            $(".slots").append("<div class='bus' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-bus-id='"+busid+"'>"+busname+"</div>");
+            console.info("Created clientside slot");
+        
+            $(".slots").append("<div class='slot' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-rot='0' data-slot-id='add'></div>");
+            savePos("add", x, y, 0);
+            doDrag();
         });
     });
 
@@ -200,13 +206,7 @@
 
     <div class="addbus">
         <div class="inner">
-            <select id="addfield" placeholder="Enter a bus name..">
-                <option value="">Enter a bus name..</option>
-            {% for bus in buses %}
-                <option value="{{ bus.id }}">{{ bus.name }}</option>
-            {% endfor %}
-            </select>
-            <button class="button" id="addbtn">Add</button>
+            <button class="button" id="addbtn">Add Bus Slot</button>
         </div>
     </div>
 

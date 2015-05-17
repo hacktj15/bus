@@ -82,12 +82,21 @@ def map_view(request):
             return HttpResponse("ok")
 
         if act == 'save':
-            slot = Slot.objects.get(id=request.POST.get('slotid'))
-            slot.rotate = request.POST.get('rot')
-            slot.coord.x = request.POST.get('x')
-            slot.coord.y = request.POST.get('y')
-            slot.coord.save()
-            slot.save()
+            id = request.POST.get('slotid')
+            if id and id != "add":
+                slot = Slot.objects.get(id=request.POST.get('slotid'))
+                slot.rotate = request.POST.get('rot')
+                slot.coord.x = request.POST.get('x')
+                slot.coord.y = request.POST.get('y')
+                slot.coord.save()
+                slot.save()
+            else:
+                coord = Coordinate.objects.create(
+                    x=request.POST.get('x'),
+                    y=request.POST.get('y')
+                )
+                slot = Slot.objects.create(coord=coord)
+            
             return HttpResponse("{}".format(slot.id))
 
     slots = Slot.objects.all()
