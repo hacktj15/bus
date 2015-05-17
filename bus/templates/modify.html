@@ -85,13 +85,24 @@
 
         saveDrop = function(dropzone, drag) {
             console.log("saveDrop");
-            $.post("/modify", {
+            var dict = {
                 "action": "modify_pos",
                 "slotid": dropzone.getAttribute("data-slot-id"),
                 "busid": drag.getAttribute("data-bus-id")
-            }, function(d) {
+            };
+            var busname = drag.innerText.trim();
+
+            if(dict["busid"] == busname) {
+                // New entry
+                dict["busid"] = "new";
+                dict["busname"] = busname;
+            }
+
+            $.post("/modify", dict, function(d) {
                 console.log("response:", d);
-                drag.setAttribute("data-inst-id", d);
+                d = JSON.parse(d);
+                drag.setAttribute("data-inst-id", d["instid"]);
+                drag.setAttribute("data-bus-id", d["busid"]);
             });
         }
 
@@ -108,7 +119,7 @@
 
 
         $("#addfield").selectize({
-            create: false
+            create: true
         });
 
         $("#addbtn").click(function() {
