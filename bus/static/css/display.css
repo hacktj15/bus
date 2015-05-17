@@ -63,7 +63,7 @@
     visibility: visible;
 }
 
-.trash.drop-target {
+.trash.drop-target, .trash:hover {
     background-color: red;
 }
 

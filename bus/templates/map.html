@@ -18,6 +18,9 @@
     .addbus .inner .button {
         margin-left: 0;
     }
+    .trash {
+        cursor: pointer;
+    }
     </style>
 
 {% endblock %}
@@ -195,6 +198,16 @@
             savePos("add", x, y, 0);
             doDrag();
         });
+
+        $(".trash").click(function() {
+            if(confirm("Delete all slots?")) {
+                $.post("", {
+                    "action": "remove_all"
+                }, function(d) {
+                    location.reload();
+                });
+            }
+        })
     });
 
    </script>
@@ -207,11 +220,11 @@
     <div class="slots">
     {% for slot in slots %}
         <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
-        &nbsp;{{ slot.id }}
+        &nbsp;
         </div>
     {% endfor %}
 
-        <div class="trash">
+        <div class="trash" title="Remove">
             <i class="fa fa-trash"></i>
         </div>
 

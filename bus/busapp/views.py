@@ -81,6 +81,12 @@ def map_view(request):
             slot.delete()
             return HttpResponse("ok")
 
+        if act == 'remove_all':
+            slots = Slot.objects.all()
+            for slot in slots:
+                slot.delete()
+            return HttpResponse("ok")
+
         if act == 'save':
             id = request.POST.get('slotid')
             if id and id != "add":
