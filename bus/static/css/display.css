@@ -70,6 +70,7 @@
 .trash > i {
     color: black;
     font-size: 32px;
+    padding-top: 4px;
 }
 
 .drop-target {
