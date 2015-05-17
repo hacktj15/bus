@@ -90,3 +90,8 @@
     right: 10px;
     font-size: 24px;
 }
+
+#lineCanvas {
+    position: absolute;
+    z-index: -1;
+}
