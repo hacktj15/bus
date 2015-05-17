@@ -20,14 +20,19 @@
   
   <script>
   	$(function() {
-        updateServ = function(busid, slotid) {
+        updateServ = function(busid, slotid, busname) {
             $.post("/modify", dat={
                 "action": "modify_pos",
                 "busid": busid,
+                "busname": busname,
                 "slotid": slotid,
                 "csrfmiddlewaretoken": "{{ csrf_token }}"
             }, function(d) {
                 console.log("server response:", d);
+                var obj = $(".bus[data-bus-id="+busid+"]");
+                if(obj && !obj.attr("data-inst-id") && d.length > 0) {
+                    obj.attr("data-inst-id", d)
+                }
             });
             console.log(dat);
         }
@@ -58,14 +63,13 @@
                     $(ui.draggable).css("top", top+"px");
                     console.log(rot, left, top);
 
-                    var bus_id = $(ui.draggable).attr("data-id");
-                    if(!bus_id) {
-                        bus_id = $(ui.draggable).html().trim()
-                    }
+                    var bus_id = $(ui.draggable).attr("data-bus-id");
+                    var bus_name = $(ui.draggable).html().trim()
+                    
 
                     var slot_id = $(this).attr("data-id")
 
-                    updateServ(bus_id, slot_id);
+                    updateServ(bus_id, slot_id, bus_name);
                 }
              });
 
@@ -77,7 +81,7 @@
 
                     $.post("/modify", {
                         "action": "remove_inst",
-                        "id": $(ui.draggable).attr("data-id"),
+                        "id": $(ui.draggable).attr("data-inst-id"),
                         "csrfmiddlewaretoken": "{{ csrf_token }}"
                     }, function(d) {
                         console.log(d);
@@ -97,7 +101,8 @@
         $("#addbtn").click(function() {
             var add_id = $("#addfield").val();
             var add_text = $("#addfield option[value='"+add_id+"']").html();
-            $(".slots").append("<div class='bus' style='left: 400px;top: 400px' data-id='"+add_id+"' data-rot=0 data-x=400 data-y=400>"+add_text+"</div>");
+            console.log("add", add_id, add_text)
+            $(".slots").append("<div class='bus' style='left: 400px;top: 400px' data-bus-id='"+add_id+"' data-inst-id='' data-rot=0 data-x=400 data-y=400>"+add_text+"</div>");
             addDrag();
         });
     });
@@ -116,7 +121,7 @@
     {% endfor %}
 
     {% for inst in instances %}
-        <div class="bus" style="{{ inst.slot.style }}" data-id="{{ inst.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
+        <div class="bus" style="{{ inst.slot.style }}" data-inst-id="{{ inst.id }}" data-bus-id="{{ inst.bus.id }}" data-rot="{{ inst.slot.rotate }}" data-x="{{ inst.slot.coord.x }}" data-y="{{ inst.slot.coord.y }}">
         {{ inst.bus }}
         </div>
     {% endfor %}

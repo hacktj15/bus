@@ -28,22 +28,33 @@ def modify_view(request):
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
-            try:
-                bus = Bus.objects.get(id=request.POST.get('busid'))
-            except (Bus.DoesNotExist, ValueError):
-                # is title
-                bus = Bus.objects.create(name=request.POST.get('busid'))
+            if 'busid' in request.POST:
+                busid = request.POST.get('busid')
+                bus = Bus.objects.get(id=busid)
+            elif 'busname' in request.POST:
+                bus = Bus.objects.create(name=request.POST.get('busname'))
 
+            oinsts = BusInstance.objects.filter(bus=bus)
+            if len(oinsts) > 0:
+                for i in oinsts:
+                    i.delete()
             businst = BusInstance.objects.get_or_create(
                 bus=bus,
                 arrived=False,
                 slot=Slot.objects.get(id=request.POST.get('slotid'))
             )
-            return HttpResponse("ok")
+            try:
+                id = businst.id
+            except AttributeError:
+                id = businst[0].id
+            return HttpResponse(id)
 
         if act == 'remove_inst':
-            inst = BusInstance.objects.get(id=request.POST.get('id'))
-            inst.delete()
+            try:
+                inst = BusInstance.objects.get(id=request.POST.get('id'))
+                inst.delete()
+            except BusInstance.DoesNotExist:
+                return HttpResponse("dne")
             return HttpResponse("ok")
 
 
