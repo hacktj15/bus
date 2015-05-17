@@ -151,6 +151,17 @@
             }
         });
 
+        $(".notifchange").change(function() {
+            var chk = $(this).is(':checked');
+            chk = (!chk ? "false" : "true");
+            $.post("", {
+                "action": "set_notify",
+                "notify": chk
+            }, function(d) {
+                console.log("response:", d);
+            });
+        })
+
     });
 
    </script>
@@ -160,6 +171,7 @@
 {% block content %}
 
 <div class="container">
+
     {% include "positioning.html" %}
     <canvas id="lineCanvas" width="1110" height="500"></canvas>
     <div class="slots">
@@ -196,6 +208,9 @@
             {% endfor %}
             </select>
             <button class="button" id="addbtn">Add</button>
+        </div>
+        <div class="notifchange-outer">
+            <input type="checkbox" value=1 class="notifchange"{% if notify_setting %} checked{% endif %} /> Send notifications
         </div>
     </div>
 

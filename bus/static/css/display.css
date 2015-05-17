@@ -37,6 +37,10 @@
     width: 100%;
 }
 
+.notifchange-outer {
+    float: right;
+}
+
 .addbus .inner select, .addbus .inner .selectize-control, .addbus .inner .selectize-control input {
     width: 430px;
     display: inline-block;

@@ -81,6 +81,8 @@ def notify_bus(request, businst):
 
     return "{" + "'emailed': {}, 'twitter': {}".format(len(users), tw) + "}"
 
+def get_notify_setting(request):
+    return False if "notify" in request.session and request.session["notify"] else True
 
 @login_required
 def buses_view(request):
@@ -88,6 +90,15 @@ def buses_view(request):
         return HttpResponseRedirect("/?permission_denied")
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
+
+        if act == 'set_notify':
+            notify = request.POST.get('notify')
+            if notify == "false":
+                request.session['notify'] = True
+            else:
+                del request.session['notify']
+            return HttpResponse("ok")
+
         if act == 'modify_pos':
             new_bus = False
             if 'busid' in request.POST and request.POST.get('busid') != "new":
@@ -108,7 +119,7 @@ def buses_view(request):
                 slot=Slot.objects.get(id=request.POST.get('slotid'))
             )
 
-            if new_bus:
+            if new_bus and get_notify_setting(request):
                 notify = notify_bus(request, businst[0])
                 return HttpResponse("{"+('"instid":{}, "busid":{}, "notify":{}'.format(
                     businst[0].id, bus.id, notify
@@ -145,7 +156,8 @@ def buses_view(request):
         "instances": instances,
         "buses": buses,
         "num": num,
-        "loc": "buses"
+        "loc": "buses",
+        "notify_setting": get_notify_setting(request)
     }
     return render(request, "buses-modify.html", context)
 
