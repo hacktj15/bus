@@ -28,7 +28,7 @@ def modify_view(request):
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
-            if 'busid' in request.POST and request.POST.get('busid') != "-1" and request.POST.get('busid') != "":
+            if 'busid' in request.POST and request.POST.get('busid') != "-1" and len(request.POST.get('busid')) > 0:
                 busid = request.POST.get('busid')
                 bus = Bus.objects.get(id=busid)
             if 'busname' in request.POST:
