@@ -28,10 +28,10 @@ def modify_view(request):
     if request.method == 'POST' and 'action' in request.POST:
         act = request.POST.get('action')
         if act == 'modify_pos':
-            if 'busid' in request.POST:
+            if 'busid' in request.POST and request.POST.get('busid') != "-1":
                 busid = request.POST.get('busid')
                 bus = Bus.objects.get(id=busid)
-            elif 'busname' in request.POST:
+            if 'busname' in request.POST:
                 bus = Bus.objects.create(name=request.POST.get('busname'))
 
             oinsts = BusInstance.objects.filter(bus=bus)

@@ -101,6 +101,9 @@
         $("#addbtn").click(function() {
             var add_id = $("#addfield").val();
             var add_text = $("#addfield option[value='"+add_id+"']").html();
+            if( (""+add_id).trim() == add_text.trim()) {
+                add_id = -1;
+            }
             console.log("add", add_id, add_text)
             $(".slots").append("<div class='bus' style='left: 400px;top: 400px' data-bus-id='"+add_id+"' data-inst-id='' data-rot=0 data-x=400 data-y=400>"+add_text+"</div>");
             addDrag();
