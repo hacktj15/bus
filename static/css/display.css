@@ -2,7 +2,6 @@
 .container {
     position: relative;
     top: 50px;
-
     width: 100%;
     overflow-x: auto;
     height: 700px;
@@ -13,7 +12,6 @@
     width: 160px;
     height: 40px;
     border: 1px dashed black;
-
     z-index: 4;
 }
 
@@ -34,7 +32,7 @@
     position: fixed;
     top: 55px;
     left: 0;
-    height: 100px;
+    height: auto;
     width: 100%;
 }
 
