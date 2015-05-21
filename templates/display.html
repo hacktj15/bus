@@ -18,7 +18,6 @@
 {% block content %}
     <div class="container do-zoom">
         {% include "positioning.html" %}
-
         <canvas id="lineCanvas" width="1110" height="500"></canvas>
         {% for inst in instances %}
             <div class="bus" style="{{ inst.slot.style }}; opacity:1">

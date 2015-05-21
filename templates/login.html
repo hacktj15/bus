@@ -6,7 +6,6 @@
 {% block css %}
 	{{ block.super }}
 	<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}" />
-
 {% endblock %}
 
 {% block js %}
@@ -16,23 +15,25 @@
 		location.href = "https://iodine.tjhsst.edu/sso?req={{ iodine_token }}"
 	}
 	</script>
-
 {% endblock %}
 
 {% block nav %}{% endblock %}
 {% block bodyclass %}loginpage{% endblock %}
 {% block content %}
-<div class="login-card">
-	<h1>Student Login</h1><br>
-	<button class="login login-submit" style="width: 100%" onclick="iodine()">Log in with Intranet</button>
-	<br />
-	<h1>Admin Login</h1><br>
-	{% if error %}{{ error }}{% endif %}
-	<form method="post" action="/login">
-	{% csrf_token %}
-		<input type="text" name="username" placeholder="Username">
-		<input type="password" name="password" placeholder="Password">
-		<input type="submit" name="login" class="login login-submit" value="Login">
-	</form>
-</div>
+	<div class="login-card">
+		<h1>Student Login</h1>
+		<br>
+		<button class="btn btn-primary" style="width: 100%" onclick="iodine()">Log in with Intranet</button>
+		<br/>
+		<h1>Admin Login</h1><br>
+		{% if error %}{{ error }}{% endif %}
+		<form method="post" action="/login">
+			{% csrf_token %}
+			<div class="form-group">
+				<input type="text" class="form-control" name="username" placeholder="Username">
+				<input type="password" class="form-control" name="password" placeholder="Password">
+				<input type="submit" name="login" class="btn btn-primary" value="Login">
+			</div>
+		</form>
+	</div>
 {% endblock %}

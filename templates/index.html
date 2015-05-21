@@ -14,7 +14,7 @@
         right: 0;
         width: 500px;
         height: 200px;
-        
+
         text-shadow: 0 1px 0 #fff;
         background-image: -webkit-linear-gradient(top,#e0e0e0 0,#fff 100%);
         background-image: -o-linear-gradient(top,#e0e0e0 0,#fff 100%);
@@ -71,37 +71,35 @@
 {% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-iodine = function() {
-    location.href = "https://iodine.tjhsst.edu/sso?req={{ iodine_token }}"
-}
-</script>
+    <script type="text/javascript">
+    iodine = function() {
+        location.href = "https://iodine.tjhsst.edu/sso?req={{ iodine_token }}"
+    }
+    </script>
 {% if not user.is_authenticated %}
-<div class="splash">
-    <div class="x" onclick="$(this).parent().remove()">x</div>
-    <h2>Welcome to BusFinder.</h2>
-    <p>Current arrival information is shown below as it happens. Connect with your TJ Intranet account and get email notifications whenever your bus arrives on campus. Follow <a href="https://twitter.com/tjbusfinder">@TJBusFinder</a> on Twitter to see when buses arrive in real-time.</p></p>
-    <button class="connectbtn login login-submit" onclick="iodine()">Log in with Intranet</button>
-</div>
+    <div class="splash">
+        <div class="x" onclick="$(this).parent().remove()">x</div>
+        <h2>Welcome to BusFinder.</h2>
+        <p>Current arrival information is shown below as it happens. Connect with your TJ Intranet account and get email notifications whenever your bus arrives on campus. Follow <a href="https://twitter.com/tjbusfinder">@TJBusFinder</a> on Twitter to see when buses arrive in real-time.</p></p>
+        <button class="connectbtn btn btn-primary" onclick="iodine()">Log in with Intranet</button>
+    </div>
 {% endif %}
 
 <div class="container do-zoom">
     {% include "positioning.html" %}
     <canvas id="lineCanvas" width="1110" height="500"></canvas>
-{% for inst in instances %}
-    <div class="bus" style="{{ inst.slot.style }}; opacity:1">
-    {{ inst.bus }}
-    </div>
-{% endfor %}
+    {% for inst in instances %}
+        <div class="bus" style="{{ inst.slot.style }}; opacity:1">
+            {{ inst.bus }}
+        </div>
+    {% endfor %}
 
-{% for slot in slots %}
-    <div class="slot" style="{{ slot.style }}; opacity:0.3">
-    </div>
-{% endfor %}
+    {% for slot in slots %}
+        <div class="slot" style="{{ slot.style }}; opacity:0.3"></div>
+    {% endfor %}
 
-{% if num == 0 %}
-    <b>There are no slots where buses can be contained.</b>
-{% endif %}
-
+    {% if num == 0 %}
+        <b>There are no slots where buses can be contained.</b>
+    {% endif %}
 </div>
 {% endblock %}
