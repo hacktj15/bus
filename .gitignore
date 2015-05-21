@@ -1,6 +1,6 @@
 *.sqlite3
 
-bus/bus/secret.py
+bus/secret.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
