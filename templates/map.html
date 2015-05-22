@@ -9,22 +9,20 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/display.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/selectize.css' %}" />
     <style type="text/css">
-    .trash {
-        visibility: visible;
-    }
-
-    .addbus .inner {
-        width: 120px;
-        text-align: center;
-    }
-    .addbus .inner .button {
-        margin-left: 0;
-    }
-    .trash {
-        cursor: pointer;
-    }
+        .trash {
+            visibility: visible;
+        }
+        .addbus .inner {
+            width: 120px;
+            text-align: center;
+        }
+        .addbus .inner .button {
+            margin-left: 0;
+        }
+        .trash {
+            cursor: pointer;
+        }
     </style>
-
 {% endblock %}
 
 {% block js %}
@@ -33,189 +31,181 @@
     <script type="text/javascript" src="{% static 'js/jquery-ui.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/interact.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/selectize.min.js' %}"></script>
-  
-  <script>
-    $(function() {
+    <script>
+        $(function() {
+            window.being_deleted = false;
+            doDrag = function() {
+                interact('.slot').draggable({
+                    intertia: true,
+                    onmove: function(event) {
+                        var target = event.target,
+                        // keep the dragged position in the data-x/data-y attributes
+                        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                        // translate the element
+                        target.style.left = x+"px";
+                        target.style.top = y+"px";
 
-    window.being_deleted = false;
-    doDrag = function() {
-        interact('.slot')
-            .draggable({
-                intertia: true,
-                onmove: function(event) {
-                    var target = event.target,
-                    // keep the dragged position in the data-x/data-y attributes
-                    x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-                    y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                    // translate the element
-                    target.style.left = x+"px";
-                    target.style.top = y+"px";
+                        // update the posiion attributes
+                        target.setAttribute('data-x', x);
+                        target.setAttribute('data-y', y);
+                    },
+                    onend: function(event) {
+                        var target = event.target,
+                        x = (parseFloat(target.getAttribute('data-x')) || 0),
+                        y = (parseFloat(target.getAttribute('data-y')) || 0),
+                        rot = target.getAttribute('data-rot'),
+                        id = target.getAttribute('data-slot-id');
 
-                    // update the posiion attributes
-                    target.setAttribute('data-x', x);
-                    target.setAttribute('data-y', y);
-                },
-                onend: function(event) {
-                    var target = event.target,
-                    x = (parseFloat(target.getAttribute('data-x')) || 0),
-                    y = (parseFloat(target.getAttribute('data-y')) || 0),
-                    rot = target.getAttribute('data-rot'),
-                    id = target.getAttribute('data-slot-id');
-
-                    console.log("pos", x, y);
-                    if(!window.being_deleted) {
-                        savePos(id, x, y, rot)
-                    } else console.log("Being deleted!");
-                }
-            }
-        );
-
-        /* rotate */
-        $(".slot").each(function() {
-            if($(".handle", $(this)).length == 0) {
-                $('<div><i class="fa fa-rotate-left" style="position:absolute; top:14px;left:14px"></i></div>').appendTo($(this)).attr('class','handle').css({
-                    'position': 'absolute',
-                    'bottom': 0,
-                    'right': 0,
-                    'height': 40,
-                    'width': 40,
-                    'background-color': 'orange',
-                    'z-index': 999
-                });
-            }
-        });
-        interact('.handle')
-            .draggable({
-                onmove: function(event) {
-                    var target = event.target;
-                    x = (0 + event.pageX) % 360;
-
-                    if(x > 350 || x < 10) x = 0;
-                    for(i=45; i<360; i += 45) {
-                        if(x > i - 10 && x < i + 10) x = i;
+                        console.log("pos", x, y);
+                        if(!window.being_deleted) {
+                            savePos(id, x, y, rot)
+                        } else console.log("Being deleted!");
                     }
+                });
 
-                    if(x > 74-10 && x < 74+10) x = 74;
-                    if(x > 254-10 && x < 254+10) x = 254;
+                /* rotate */
+                $(".slot").each(function() {
+                    if($(".handle", $(this)).length == 0) {
+                        $('<div><i class="fa fa-rotate-left" style="position:absolute; top:14px;left:14px"></i></div>').appendTo($(this)).attr('class','handle').css({
+                            'position': 'absolute',
+                            'bottom': 0,
+                            'right': 0,
+                            'height': 40,
+                            'width': 40,
+                            'background-color': 'orange',
+                            'z-index': 999
+                        });
+                    }
+                });
+                interact('.handle').draggable({
+                    onmove: function(event) {
+                        var target = event.target;
+                        x = (0 + event.pageX) % 360;
 
-                    var rotateCSS = 'rotate(' + x + 'deg)';
-                    target.parentNode.setAttribute('data-rot', x);
+                        if(x > 350 || x < 10) x = 0;
+                        for(i=45; i<360; i += 45) {
+                            if(x > i - 10 && x < i + 10) x = i;
+                        }
 
-                    target.parentNode.style.transform = rotateCSS;
-                    target.parentNode.style.webkitTransform = rotateCSS;
-                    target.parentNode.style.mozTransform = rotateCSS;
-                    $(".deg-count").show().html(x+"°");
-                },
-                onend: function(event) {
-                    var target = event.target.parentNode,
-                    x = (parseFloat(target.getAttribute('data-x')) || 0),
-                    y = (parseFloat(target.getAttribute('data-y')) || 0),
-                    rot = target.getAttribute('data-rot'),
-                    id = target.getAttribute('data-slot-id');
-                    console.log("rot", rot);
-                    if(!window.being_deleted) {
-                        savePos(id, x, y, rot)
-                    } else console.log("Being deleted!");
-                    $(".deg-count").hide();
+                        if(x > 74-10 && x < 74+10) x = 74;
+                        if(x > 254-10 && x < 254+10) x = 254;
 
-                }
-            });
+                        var rotateCSS = 'rotate(' + x + 'deg)';
+                        target.parentNode.setAttribute('data-rot', x);
 
+                        target.parentNode.style.transform = rotateCSS;
+                        target.parentNode.style.webkitTransform = rotateCSS;
+                        target.parentNode.style.mozTransform = rotateCSS;
+                        $(".deg-count").show().html(x+"°");
+                    },
+                    onend: function(event) {
+                        var target = event.target.parentNode,
+                        x = (parseFloat(target.getAttribute('data-x')) || 0),
+                        y = (parseFloat(target.getAttribute('data-y')) || 0),
+                        rot = target.getAttribute('data-rot'),
+                        id = target.getAttribute('data-slot-id');
+                        console.log("rot", rot);
+                        if(!window.being_deleted) {
+                            savePos(id, x, y, rot)
+                        } else console.log("Being deleted!");
+                        $(".deg-count").hide();
 
-        interact('.trash').dropzone({
-            accept: ".slot",
-            overlap: 0.1,
+                    }
+                });
 
-            ondropactivate: function(event) {
-                event.target.classList.add('drop-active');
-                event.target.classList.remove('drop-current');
-                event.relatedTarget.classList.remove('drop-current');
-            },
-            ondragenter: function(event) {
-                var draggableElement = event.relatedTarget,
-                dropzoneElement = event.target;
+                interact('.trash').dropzone({
+                    accept: ".slot",
+                    overlap: 0.1,
 
-                dropzoneElement.classList.add('drop-target');
-                draggableElement.classList.add('can-drop');
-                event.relatedTarget.classList.remove('cant-drop');
-            },
-            ondragleave: function(event) {
-                event.target.classList.remove('drop-target');
-                event.relatedTarget.classList.remove('can-drop');
-                event.relatedTarget.classList.add('cant-drop');
-            },
-            ondrop: function(event) {
-                window.being_deleted = true;
-                event.target.classList.add('being-deleted');
-                event.target.classList.remove('drop-active');
-                event.target.classList.remove('drop-target');
-                event.target.classList.add('drop-current');
-                event.relatedTarget.classList.add('drop-current');
+                    ondropactivate: function(event) {
+                        event.target.classList.add('drop-active');
+                        event.target.classList.remove('drop-current');
+                        event.relatedTarget.classList.remove('drop-current');
+                    },
+                    ondragenter: function(event) {
+                        var draggableElement = event.relatedTarget,
+                        dropzoneElement = event.target;
 
-                var dropzone = event.target;
-                var drag = event.relatedTarget;
+                        dropzoneElement.classList.add('drop-target');
+                        draggableElement.classList.add('can-drop');
+                        event.relatedTarget.classList.remove('cant-drop');
+                    },
+                    ondragleave: function(event) {
+                        event.target.classList.remove('drop-target');
+                        event.relatedTarget.classList.remove('can-drop');
+                        event.relatedTarget.classList.add('cant-drop');
+                    },
+                    ondrop: function(event) {
+                        window.being_deleted = true;
+                        event.target.classList.add('being-deleted');
+                        event.target.classList.remove('drop-active');
+                        event.target.classList.remove('drop-target');
+                        event.target.classList.add('drop-current');
+                        event.relatedTarget.classList.add('drop-current');
 
-                console.log(dropzone.classList)
-                trashDrop(event.target, event.relatedTarget);
-                
-            }
-        });
-    }
+                        var dropzone = event.target;
+                        var drag = event.relatedTarget;
 
-    doDrag();
-
-        savePos = function(slotid, x, y, rot) {
-            console.log("savePos");
-            $.post("", {
-                "action": "save",
-                "slotid": slotid,
-                "x": x,
-                "y": y,
-                "rot": rot
-            }, function(d) {
-                console.log("response:", d);
-                $(".slot[data-slot-id="+slotid+"]").attr("data-slot-id", d);
-            });
-        }
-
-        trashDrop = function(dropzone, drag) {
-            console.log("trashDrop");
-            $.post("", {
-                "action": "remove_slot",
-                "slotid": drag.getAttribute("data-slot-id")
-            }, function(d) {
-                console.log("response:", d);
-                drag.remove();
-                window.being_deleted = !window.being_deleted;
-            });
-        }
-
-
-        $("#addfield").selectize({
-            create: true
-        });
-
-        $("#addbtn").click(function() {
-            var x = 400, y = 400;
-            console.info("Created clientside slot");
-        
-            $(".slots").append("<div class='slot' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-rot='0' data-slot-id='add'></div>");
-            savePos("add", x, y, 0);
-            doDrag();
-        });
-
-        $(".trash").click(function() {
-            if(confirm("Pressing the trash button removes all slots. Are you sure you want to do this?")) {
-                $.post("", {
-                    "action": "remove_all"
-                }, function(d) {
-                    location.reload();
+                        console.log(dropzone.classList)
+                        trashDrop(event.target, event.relatedTarget);
+                    }
                 });
             }
-        })
-    });
 
-   </script>
+            doDrag();
+
+            savePos = function(slotid, x, y, rot) {
+                console.log("savePos");
+                $.post("", {
+                    "action": "save",
+                    "slotid": slotid,
+                    "x": x,
+                    "y": y,
+                    "rot": rot
+                }, function(d) {
+                    console.log("response:", d);
+                    $(".slot[data-slot-id="+slotid+"]").attr("data-slot-id", d);
+                });
+            }
+
+            trashDrop = function(dropzone, drag) {
+                console.log("trashDrop");
+                $.post("", {
+                    "action": "remove_slot",
+                    "slotid": drag.getAttribute("data-slot-id")
+                }, function(d) {
+                    console.log("response:", d);
+                    drag.remove();
+                    window.being_deleted = !window.being_deleted;
+                });
+            }
+
+
+            $("#addfield").selectize({
+                create: true
+            });
+
+            $("#addbtn").click(function() {
+                var x = 400, y = 400;
+                console.info("Created clientside slot");
+
+                $(".slots").append("<div class='slot' data-x='"+x+"' data-y='"+y+"' style='left:"+x+"px; top:"+y+"px;' data-rot='0' data-slot-id='add'></div>");
+                savePos("add", x, y, 0);
+                doDrag();
+            });
+
+            $(".trash").click(function() {
+                if(confirm("Pressing the trash button removes all slots. Are you sure you want to do this?")) {
+                    $.post("", {
+                        "action": "remove_all"
+                    }, function(d) {
+                        location.reload();
+                    });
+                }
+            });
+        });
+    </script>
 
     <script type="text/javascript" src="{% static 'js/canvas.js' %}"></script>
 {% endblock %}
@@ -227,23 +217,19 @@
     <canvas id="lineCanvas" width="1110" height="500"></canvas>
     <div class="deg-count"></div>
     <div class="slots">
-    {% for slot in slots %}
-        <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
-        &nbsp;
-        </div>
-    {% endfor %}
-
+        {% for slot in slots %}
+            <div class="slot" style="{{ slot.style }}" data-slot-id="{{ slot.id }}" data-rot="{{ slot.rotate }}" data-x="{{ slot.coord.x }}" data-y="{{ slot.coord.y }}">
+                &nbsp;
+            </div>
+        {% endfor %}
         <div class="trash" title="Remove">
             <i class="fa fa-trash"></i>
         </div>
-
     </div>
-
     <div class="addbus">
         <div class="inner">
-            <button class="button" id="addbtn">Add Bus Slot</button>
+            <button class="btn btn-default" id="addbtn">Add Bus Slot</button>
         </div>
     </div>
-
 </div>
 {% endblock %}

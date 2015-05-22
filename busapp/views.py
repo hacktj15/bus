@@ -15,7 +15,6 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .models import BusInstance, Bus, County, Slot, Coordinate, BusUser
 from bus import secret
 
-
 # Create your views here.
 
 def index_view(request):
@@ -192,7 +191,7 @@ def map_view(request):
                     y=request.POST.get('y')
                 )
                 slot = Slot.objects.create(coord=coord)
-            
+
             return HttpResponse("{}".format(slot.id))
 
     slots = Slot.objects.all()
@@ -250,7 +249,7 @@ def setup_view(request):
         usr.save()
         context["message"] = "Your preference was saved."
 
-    
+
     return render(request, "setup.html", context)
 
 def login_view(request):

@@ -13,9 +13,7 @@ drawCanvas = function() {
     ctx.lineTo(right, height);
     ctx.stroke();
 
-
-    for (var i = 0; i < 13; i++) 
-    {
+    for (var i = 0; i < 13; i++) {
         left = left - 80;
         right = right - 80;
         var ptx = c.getContext("2d");
@@ -26,5 +24,5 @@ drawCanvas = function() {
     };
 }
 $(function() {
-    drawCanvas();   
+    drawCanvas();
 });
