@@ -18,8 +18,6 @@
 .bus {
     width: 160px;
     height: 40px;
-    /*border: 1px solid black;
-    background-color: yellow;*/
     background: url(/static/img/bus.png);
     line-height: 40px;
     text-align: center;
@@ -113,9 +111,6 @@
 .message {
     position: fixed;
     top: 95px;
-    /*left: 30%;
-    width: 40%;
-    background-color: yellow;*/
     padding: 10px;
     display: none;
     z-index: 999;
